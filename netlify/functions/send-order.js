@@ -38,7 +38,7 @@ exports.handler = async (event) => {
   } = data;
 
   const RESEND_API_KEY = process.env.RESEND_API_KEY;
-  const FROM          = process.env.RESEND_FROM || 'noreply@ai-lektor.cz';
+  const FROM          = process.env.RESEND_FROM || 'AI Lektor <noreply@ai-lektor.cz>';
   const NOTIFY_EMAIL  = process.env.NOTIFY_EMAIL || 'ailektor.info@gmail.com';
 
   if (!RESEND_API_KEY) {
@@ -157,7 +157,7 @@ exports.handler = async (event) => {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        from: `AI Lektor <${FROM}>`,
+        from: FROM,
         to: [email_login],
         subject: subjectCustomer,
         html: bodyCustomer,
@@ -169,7 +169,7 @@ exports.handler = async (event) => {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        from: `AI Lektor <${FROM}>`,
+        from: FROM,
         to: [NOTIFY_EMAIL],
         subject: `🛒 Nová objednávka: ${plan_name} (${formattedPrice}) — VS ${vs}`,
         html: bodyNotify,
