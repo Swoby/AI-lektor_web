@@ -41,7 +41,13 @@ exports.handler = async (event) => {
   const FROM          = process.env.RESEND_FROM || 'AI Lektor <noreply@ai-lektor.cz>';
   const NOTIFY_EMAIL  = process.env.NOTIFY_EMAIL || 'ailektor.info@gmail.com';
 
+  console.log('DEBUG: RESEND_API_KEY set?', !!RESEND_API_KEY);
+  console.log('DEBUG: FROM =', FROM);
+  console.log('DEBUG: NOTIFY_EMAIL =', NOTIFY_EMAIL);
+  console.log('DEBUG: data =', JSON.stringify(data));
+
   if (!RESEND_API_KEY) {
+    console.log('ERROR: RESEND_API_KEY chybi!');
     return { statusCode: 500, headers, body: JSON.stringify({ error: 'RESEND_API_KEY not set' }) };
   }
 
@@ -183,6 +189,7 @@ exports.handler = async (event) => {
       body: JSON.stringify({ ok, r1: r1.status, r2: r2.status }),
     };
   } catch (err) {
+    console.log('ERROR catch:', err.message, err.stack);
     return { statusCode: 500, headers, body: JSON.stringify({ error: err.message }) };
   }
 };
