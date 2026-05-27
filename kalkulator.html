@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<!--
+  KOSTRA: Interaktivní kalkulačka / nástroj
+  Použití: pro stránky s JS výpočtem (složený úrok, BMI, kalorie, splátky...)
+  Obsahuje: page-header, input formulář, výsledkový panel, graf, prose popis
+-->
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>[Název kalkulačky] | [Jméno Příjmení]</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --brand: #1e3a6e; --brand2: #2a5298; --accent: #c8912a;
+      --dark: #e8e2d7; --border: rgba(30,58,110,0.14);
+      --text: #1a2535; --muted: #5a6a7d; --subtle: #374151;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--dark); color: var(--text); font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; min-height: 100vh; }
+
+    /* NAV */
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(250,247,242,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 24px; }
+    .nav-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px; gap: 24px; }
+    .nav-logo { font-size: 1.05rem; font-weight: 800; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 10px; }
+    .nav-avatar { width: 54px; height: 54px; border-radius: 50%; object-fit: cover; object-position: center top; flex-shrink: 0; border: 2px solid rgba(30,58,110,0.2); }
+    .nav-links { display: flex; gap: 6px; list-style: none; flex-wrap: wrap; }
+    .nav-links a { color: var(--subtle); text-decoration: none; font-size: 0.9rem; font-weight: 600; padding: 6px 12px; border-radius: 8px; transition: color 0.2s, background 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: #1e3a6e; background: rgba(30,58,110,0.10); }
+    .nav-cta { background: linear-gradient(135deg, var(--brand), var(--brand2)) !important; color: #fff !important; border-radius: 10px !important; padding: 8px 16px !important; }
+    .nav-divider { width: 1px; height: 18px; background: rgba(30,58,110,0.22); margin: 0 6px; align-self: center; flex-shrink: 0; }
+    .nav-links a.nav-finance { color: #1e3a6e; }
+    .nav-links a.nav-wellness { color: #065f46; }
+    .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 6px; }
+    .nav-hamburger span { display: block; width: 24px; height: 2px; background: var(--text); border-radius: 2px; transition: all 0.3s; }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    @media (max-width: 768px) {
+      nav { position: fixed; top: 0; left: 0; right: 0; }
+      body { padding-top: 64px; }
+      .nav-hamburger { display: flex; }
+      .nav-links { display: none; flex-direction: column; gap: 4px; position: fixed; top: 64px; left: 0; right: 0; background: rgba(250,247,242,0.98); border-bottom: 1px solid var(--border); padding: 12px 16px 18px; z-index: 99; }
+      .nav-links.open { display: flex; }
+      .nav-links li.nav-divider { display: none; }
+      .nav-links a { font-size: 1rem; padding: 10px 14px; border-radius: 10px; }
+    }
+
+    /* PAGE HEADER */
+    .page-header { max-width: 1100px; margin: 0 auto; padding: 64px 24px 48px; }
+    .section-label { display: inline-flex; align-items: center; gap: 10px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #1e3a6e; margin-bottom: 10px; }
+    .section-label::before { content: ''; display: block; width: 28px; height: 2px; background: linear-gradient(90deg, var(--brand), var(--brand2)); border-radius: 2px; }
+    .page-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 900; letter-spacing: -0.04em; color: var(--text); margin-bottom: 16px; }
+    .page-title span { color: var(--accent); }
+    .page-sub { color: var(--subtle); font-size: 1.1rem; max-width: 640px; }
+    .divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+    .section-wrap { max-width: 1100px; margin: 0 auto; padding: 64px 24px; }
+
+    /* KALKULAČKA LAYOUT */
+    .calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
+    @media (max-width: 768px) { .calc-grid { grid-template-columns: 1fr; } }
+
+    /* INPUT PANEL */
+    .calc-inputs { background: #ffffff; border: 1px solid var(--border); border-radius: 24px; padding: 32px 28px; }
+    .calc-inputs h2 { font-size: 1.2rem; font-weight: 800; color: var(--text); margin-bottom: 24px; }
+    .input-group { margin-bottom: 22px; }
+    .input-group label { display: block; font-size: 0.92rem; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+    .input-group input, .input-group select { width: 100%; border: 1.5px solid var(--border); border-radius: 12px; padding: 12px 16px; font-size: 1rem; background: rgba(250,247,242,0.8); color: var(--text); outline: none; font-family: inherit; transition: border-color 0.2s, box-shadow 0.2s; }
+    .input-group input:focus, .input-group select:focus { border-color: var(--brand); box-shadow: 0 0 0 4px rgba(30,58,110,0.12); }
+    .input-note { font-size: 0.82rem; color: var(--muted); margin-top: 4px; }
+    /* Slider */
+    .input-group input[type="range"] { padding: 0; background: transparent; border: none; border-radius: 0; cursor: pointer; }
+    .input-group input[type="range"]:focus { box-shadow: none; border-color: transparent; }
+    .range-labels { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
+    .calc-btn { width: 100%; border: none; border-radius: 14px; padding: 14px; font-size: 1rem; font-weight: 800; background: linear-gradient(135deg, var(--brand), var(--brand2)); color: #fff; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 8px 32px rgba(30,58,110,0.28); margin-top: 8px; }
+    .calc-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(30,58,110,0.38); }
+
+    /* VÝSLEDKOVÝ PANEL */
+    .calc-results { display: flex; flex-direction: column; gap: 20px; }
+    .result-card { background: linear-gradient(135deg, rgba(30,58,110,0.12), rgba(42,82,152,0.08)); border: 1px solid rgba(30,58,110,0.25); border-radius: 20px; padding: 24px 26px; }
+    .result-card h3 { font-size: 0.88rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 8px; }
+    .result-val { font-size: 2.2rem; font-weight: 900; letter-spacing: -0.04em; color: var(--accent); line-height: 1.1; }
+    .result-sub { font-size: 0.88rem; color: var(--muted); margin-top: 4px; }
+    .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .result-box { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 16px; }
+    .result-box .lbl { font-size: 0.8rem; color: var(--muted); margin-bottom: 4px; }
+    .result-box .val { font-size: 1.3rem; font-weight: 900; color: var(--text); }
+
+    /* GRAF */
+    .chart-wrap { background: #ffffff; border: 1px solid var(--border); border-radius: 20px; padding: 24px; }
+    .chart-wrap h3 { font-size: 1rem; font-weight: 800; color: var(--text); margin-bottom: 16px; }
+    .chart-canvas { width: 100%; height: 220px; background: rgba(30,58,110,0.04); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 0.9rem; }
+    /* Poznámka: Nahraďte .chart-canvas skutečným <canvas> a Chart.js kódem */
+
+    /* PROSE POPIS */
+    .prose-section { max-width: 760px; margin: 0 auto; }
+    .prose-section h2 { font-size: 1.5rem; font-weight: 900; color: var(--text); margin-bottom: 14px; letter-spacing: -0.02em; }
+    .prose-section p { color: var(--subtle); font-size: 1rem; margin-bottom: 18px; line-height: 1.85; }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); padding: 40px 24px; text-align: center; }
+    .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+    .footer-nav { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; list-style: none; }
+    .footer-nav a { color: var(--muted); text-decoration: none; font-size: 0.88rem; padding: 4px 10px; border-radius: 6px; transition: color 0.2s; }
+    .footer-nav a:hover { color: var(--brand); }
+    .footer-copy { font-size: 0.82rem; color: var(--muted); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><img src="../profilovka.jpg" alt="" class="nav-avatar">[Jméno] <span>[Příjmení]</span></a>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Domů</a></li>
+      <li class="nav-divider"></li>
+      <li><a href="stranka-1.html" class="nav-finance">[Stránka 1]</a></li>
+      <li><a href="kalkulator.html" class="nav-finance active">[Kalkulačka]</a></li>
+      <li class="nav-divider"></li>
+      <li><a href="stranka-2.html" class="nav-wellness">[Stránka 2]</a></li>
+      <li><a href="kontakt.html" class="nav-cta">Kontakt</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="section-label">[Kategorie]</div>
+  <h1 class="page-title">[Název kalkulačky] <span>[Zvýrazněné slovo]</span></h1>
+  <p class="page-sub">[Popis — co kalkulačka počítá a jak ji použít]</p>
+</div>
+
+<hr class="divider" />
+
+<!-- KALKULAČKA -->
+<div class="section-wrap">
+  <div class="calc-grid">
+
+    <!-- INPUT FORMULÁŘ -->
+    <div class="calc-inputs">
+      <h2>[Nastavte parametry]</h2>
+
+      <div class="input-group">
+        <label for="input1">[Název vstupu 1]</label>
+        <input type="number" id="input1" value="[výchozí hodnota]" min="0" />
+        <div class="input-note">[Nápověda k poli 1]</div>
+      </div>
+
+      <div class="input-group">
+        <label for="input2">[Název vstupu 2]</label>
+        <input type="number" id="input2" value="[výchozí hodnota]" min="0" />
+        <div class="input-note">[Nápověda k poli 2]</div>
+      </div>
+
+      <!-- Příklad slideru -->
+      <div class="input-group">
+        <label for="slider1">[Název slideru]: <strong id="sliderVal">[výchozí]</strong></label>
+        <input type="range" id="slider1" min="[min]" max="[max]" value="[výchozí]"
+               oninput="document.getElementById('sliderVal').textContent = this.value" />
+        <div class="range-labels"><span>[min]</span><span>[max]</span></div>
+      </div>
+
+      <div class="input-group">
+        <label for="select1">[Výběrové pole]</label>
+        <select id="select1">
+          <option value="1">[Možnost 1]</option>
+          <option value="2">[Možnost 2]</option>
+          <option value="3">[Možnost 3]</option>
+        </select>
+      </div>
+
+      <button class="calc-btn" onclick="vypocitat()">[Spočítat]</button>
+    </div>
+
+    <!-- VÝSLEDKY -->
+    <div class="calc-results">
+
+      <!-- Hlavní výsledek -->
+      <div class="result-card">
+        <h3>[Hlavní výsledek]</h3>
+        <div class="result-val" id="mainResult">[0 Kč]</div>
+        <div class="result-sub">[Doplňující popis výsledku]</div>
+      </div>
+
+      <!-- Dílčí výsledky -->
+      <div class="result-grid">
+        <div class="result-box">
+          <div class="lbl">[Výsledek A]</div>
+          <div class="val" id="resultA">[—]</div>
+        </div>
+        <div class="result-box">
+          <div class="lbl">[Výsledek B]</div>
+          <div class="val" id="resultB">[—]</div>
+        </div>
+        <div class="result-box">
+          <div class="lbl">[Výsledek C]</div>
+          <div class="val" id="resultC">[—]</div>
+        </div>
+        <div class="result-box">
+          <div class="lbl">[Výsledek D]</div>
+          <div class="val" id="resultD">[—]</div>
+        </div>
+      </div>
+
+      <!-- Graf (placeholder) -->
+      <div class="chart-wrap">
+        <h3>[Název grafu]</h3>
+        <div class="chart-canvas" id="chartArea">
+          <!-- Nahraďte skutečným <canvas id="myChart"></canvas> a Chart.js kódem -->
+          [Graf se zobrazí po výpočtu]
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<hr class="divider" />
+
+<!-- POPIS / VYSVĚTLENÍ -->
+<div class="section-wrap">
+  <div class="prose-section">
+    <h2>[Jak [téma kalkulačky] funguje]</h2>
+    <p>[Vysvětlující odstavec 1 — princip výpočtu nebo tématu]</p>
+    <p>[Vysvětlující odstavec 2 — proč je to důležité]</p>
+    <p>[Vysvětlující odstavec 3 — praktická doporučení]</p>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div style="font-size:1.1rem; font-weight:800;">[Jméno] <span style="color:var(--accent);">[Příjmení]</span></div>
+    <ul class="footer-nav">
+      <li><a href="index.html">Domů</a></li>
+      <li class="nav-divider"></li>
+      <li><a href="stranka-1.html">[Stránka 1]</a></li>
+      <li><a href="kalkulator.html">[Kalkulačka]</a></li>
+      <li><a href="kontakt.html">Kontakt</a></li>
+    </ul>
+    <div class="footer-copy">&copy; [Rok] [Jméno Příjmení] &nbsp;&middot;&nbsp; [email@domena.cz]</div>
+  </div>
+</footer>
+
+<script>
+  /* ═══════════════════════════════════
+     LOGIKA KALKULAČKY — doplňte výpočet
+  ═══════════════════════════════════ */
+  function vypocitat() {
+    var input1 = parseFloat(document.getElementById('input1').value) || 0;
+    var input2 = parseFloat(document.getElementById('input2').value) || 0;
+    var slider = parseFloat(document.getElementById('slider1').value) || 0;
+
+    // TODO: Doplňte výpočetní logiku
+    var hlavniVysledek = 0; // např. složený úrok, splátka, BMI...
+    var vysledekA = 0;
+    var vysledekB = 0;
+    var vysledekC = 0;
+    var vysledekD = 0;
+
+    // Zobrazit výsledky
+    document.getElementById('mainResult').textContent = hlavniVysledek.toLocaleString('cs-CZ') + ' [jednotka]';
+    document.getElementById('resultA').textContent = vysledekA.toLocaleString('cs-CZ');
+    document.getElementById('resultB').textContent = vysledekB.toLocaleString('cs-CZ');
+    document.getElementById('resultC').textContent = vysledekC.toLocaleString('cs-CZ');
+    document.getElementById('resultD').textContent = vysledekD.toLocaleString('cs-CZ');
+
+    // TODO: Inicializovat / aktualizovat graf (Chart.js nebo jiná knihovna)
+    // var ctx = document.getElementById('myChart').getContext('2d');
+    // new Chart(ctx, { type: 'bar', data: { ... }, options: { ... } });
+  }
+
+  /* Hamburger menu */
+  var btn = document.getElementById('navHamburger');
+  var menu = document.getElementById('navLinks');
+  if (btn && menu) {
+    btn.addEventListener('click', function() { btn.classList.toggle('open'); menu.classList.toggle('open'); });
+    menu.querySelectorAll('a').forEach(function(link) {
+      link.addEventListener('click', function() { btn.classList.remove('open'); menu.classList.remove('open'); });
+    });
+  }
+</script>
+</body>
+</html>

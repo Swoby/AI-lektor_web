@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ceník — AI Lektor exaktních věd</title>
+  <meta name="description" content="Transparentní ceník pro školy i rodiny. Basic, Standard, Plus — podle velikosti školy a intenzity využití. Rodinné předplatné od 99 Kč/měsíc." />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --brand: #1e3a6e; --brand2: #2a5298; --accent: #c8912a;
+      --bg: #f5f2ec; --border: rgba(30,58,110,0.13);
+      --text: #1a2535; --muted: #5a6a7d; --subtle: #374151; --white: #ffffff;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; }
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(245,242,236,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 24px; }
+    .nav-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px; gap: 16px; }
+    .nav-logo { font-size: 1rem; font-weight: 900; letter-spacing: -0.02em; color: var(--text); text-decoration: none; white-space: nowrap; display: flex; align-items: center; gap: 8px; }
+    .nav-logo-icon { font-size: 1.4rem; }
+    .nav-logo-sub { font-size: 0.7rem; font-weight: 600; color: var(--muted); letter-spacing: 0.04em; display: block; line-height: 1; }
+    .nav-links { display: flex; gap: 4px; list-style: none; }
+    .nav-links a { color: var(--subtle); text-decoration: none; font-size: 0.88rem; font-weight: 600; padding: 6px 12px; border-radius: 8px; transition: color 0.2s, background 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--brand); background: rgba(30,58,110,0.08); }
+    .nav-cta { background: linear-gradient(135deg, var(--brand), var(--brand2)) !important; color: #fff !important; border-radius: 10px !important; padding: 7px 16px !important; }
+    .nav-divider { width: 1px; height: 18px; background: var(--border); margin: 0 4px; align-self: center; flex-shrink: 0; }
+    .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 6px; }
+    .nav-hamburger span { display: block; width: 24px; height: 2px; background: var(--text); border-radius: 2px; transition: all 0.3s; }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    @media (max-width: 768px) {
+      nav { position: fixed; top: 0; left: 0; right: 0; }
+      body { padding-top: 64px; }
+      .nav-hamburger { display: flex; }
+      .nav-links { display: none; flex-direction: column; gap: 4px; position: fixed; top: 64px; left: 0; right: 0; background: rgba(245,242,236,0.98); border-bottom: 1px solid var(--border); padding: 12px 16px 18px; z-index: 99; }
+      .nav-links.open { display: flex; }
+      .nav-links li.nav-divider { display: none; }
+      .nav-links a { font-size: 1rem; padding: 10px 14px; }
+    }
+    /* PAGE HEADER */
+    .page-header { background: linear-gradient(160deg, #1e3a6e 0%, #2a5298 100%); color: #fff; padding: 72px 24px 64px; text-align: center; }
+    .page-header-inner { max-width: 700px; margin: 0 auto; }
+    .page-label { display: inline-flex; align-items: center; gap: 8px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.65); background: rgba(255,255,255,0.1); padding: 5px 12px; border-radius: 20px; margin-bottom: 18px; }
+    .page-title { font-size: clamp(2rem, 4.5vw, 3rem); font-weight: 900; letter-spacing: -0.04em; line-height: 1.1; margin-bottom: 16px; }
+    .page-title span { color: #f9c846; }
+    .page-sub { font-size: 1.1rem; color: rgba(255,255,255,0.8); max-width: 560px; margin: 0 auto; }
+    /* TAB SWITCHER */
+    .tab-wrap { max-width: 1100px; margin: 0 auto; padding: 40px 24px 0; }
+    .tabs { display: flex; gap: 8px; background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 6px; width: fit-content; }
+    .tab-btn { padding: 10px 24px; border-radius: 12px; border: none; font-size: 0.92rem; font-weight: 700; cursor: pointer; background: none; color: var(--muted); transition: background 0.2s, color 0.2s; }
+    .tab-btn.active { background: linear-gradient(135deg, var(--brand), var(--brand2)); color: #fff; box-shadow: 0 4px 16px rgba(30,58,110,0.25); }
+    .tab-btn:hover:not(.active) { background: rgba(30,58,110,0.06); color: var(--brand); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    /* SECTION */
+    .section { max-width: 1100px; margin: 0 auto; padding: 56px 24px; }
+    .section-label { display: inline-flex; align-items: center; gap: 10px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--brand); margin-bottom: 10px; }
+    .section-label::before { content: ''; display: block; width: 28px; height: 2px; background: linear-gradient(90deg, var(--brand), var(--brand2)); border-radius: 2px; }
+    .section-title { font-size: clamp(1.6rem, 3.5vw, 2.2rem); font-weight: 900; letter-spacing: -0.04em; color: var(--text); margin-bottom: 10px; }
+    .section-title span { color: var(--accent); }
+    .section-sub { color: var(--subtle); font-size: 1rem; margin-bottom: 36px; max-width: 580px; }
+    .divider { border: none; border-top: 1px solid var(--border); }
+    /* PACKAGE SELECTOR */
+    .pkg-selector { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 40px; }
+    .pkg-btn { padding: 10px 22px; border-radius: 12px; border: 2px solid var(--border); background: var(--white); font-size: 0.92rem; font-weight: 700; cursor: pointer; color: var(--muted); transition: all 0.2s; }
+    .pkg-btn.active { border-color: var(--brand2); color: var(--brand); background: rgba(30,58,110,0.06); }
+    .pkg-btn:hover:not(.active) { border-color: rgba(30,58,110,0.3); color: var(--brand); }
+    /* SCHOOL PRICING TABLE */
+    .tier-group { display: none; }
+    .tier-group.active { display: block; }
+    .tier-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    @media (max-width: 850px) { .tier-grid { grid-template-columns: 1fr; } }
+    .tier-card { background: var(--white); border: 2px solid var(--border); border-radius: 22px; padding: 32px 28px; position: relative; transition: box-shadow 0.2s; }
+    .tier-card:hover { box-shadow: 0 8px 40px rgba(30,58,110,0.1); }
+    .tier-card.popular { border-color: var(--brand2); }
+    .tier-popular-badge { position: absolute; top: -13px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, var(--brand), var(--brand2)); color: #fff; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 14px; border-radius: 20px; white-space: nowrap; }
+    .tier-name { font-size: 1.15rem; font-weight: 900; color: var(--text); margin-bottom: 6px; }
+    .tier-tagline { font-size: 0.87rem; color: var(--muted); margin-bottom: 16px; }
+    .tier-exchanges { display: inline-block; font-size: 0.82rem; font-weight: 700; color: var(--brand); background: rgba(30,58,110,0.08); padding: 4px 10px; border-radius: 8px; margin-bottom: 20px; }
+    .tier-price-main { font-size: 2.4rem; font-weight: 900; color: var(--brand); letter-spacing: -0.05em; line-height: 1; }
+    .tier-price-period { font-size: 0.9rem; color: var(--muted); margin-bottom: 4px; }
+    .tier-price-per { font-size: 0.85rem; color: var(--muted); margin-bottom: 4px; }
+    .tier-annual-note { font-size: 0.82rem; color: #2e7d32; font-weight: 700; margin-top: 6px; margin-bottom: 20px; }
+    .tier-list { list-style: none; display: flex; flex-direction: column; gap: 9px; padding-top: 20px; border-top: 1px solid var(--border); }
+    .tier-list li { font-size: 0.88rem; color: var(--subtle); display: flex; gap: 9px; align-items: flex-start; }
+    .tier-list li::before { content: '✓'; color: #43a047; font-weight: 900; flex-shrink: 0; }
+    .tier-cta { display: block; text-align: center; margin-top: 24px; padding: 12px 20px; border-radius: 12px; text-decoration: none; font-weight: 800; font-size: 0.92rem; transition: all 0.2s; }
+    .tier-cta-primary { background: linear-gradient(135deg, var(--brand), var(--brand2)); color: #fff; box-shadow: 0 4px 16px rgba(30,58,110,0.25); }
+    .tier-cta-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(30,58,110,0.35); }
+    .tier-cta-secondary { border: 2px solid var(--border); color: var(--brand); background: var(--white); }
+    .tier-cta-secondary:hover { border-color: var(--brand); }
+    /* SIZE NOTE */
+    .size-note { background: rgba(30,58,110,0.05); border: 1px solid rgba(30,58,110,0.12); border-radius: 14px; padding: 16px 20px; margin-bottom: 32px; font-size: 0.9rem; color: var(--subtle); display: flex; gap: 10px; align-items: flex-start; }
+    .size-note-icon { flex-shrink: 0; font-size: 1.1rem; }
+    /* ALL SIZES TABLE */
+    .sizes-table-wrap { overflow-x: auto; border-radius: 16px; border: 1px solid var(--border); background: var(--white); }
+    .sizes-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    .sizes-table th { background: rgba(30,58,110,0.06); color: var(--brand); font-weight: 800; font-size: 0.82rem; letter-spacing: 0.05em; text-transform: uppercase; padding: 14px 20px; text-align: left; border-bottom: 1px solid var(--border); }
+    .sizes-table td { padding: 14px 20px; border-bottom: 1px solid rgba(30,58,110,0.07); color: var(--subtle); }
+    .sizes-table tr:last-child td { border-bottom: none; }
+    .sizes-table tr:hover td { background: rgba(30,58,110,0.02); }
+    .price-cell { font-weight: 800; color: var(--text); }
+    .perkid-cell { font-size: 0.82rem; color: var(--muted); }
+    .popular-row td { background: rgba(42,82,152,0.04); }
+    /* QR PRICING */
+    .qr-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 32px; }
+    @media (max-width: 768px) { .qr-grid { grid-template-columns: 1fr; } }
+    .qr-card { background: var(--white); border: 1px solid var(--border); border-radius: 18px; padding: 28px 24px; }
+    .qr-icon { font-size: 2rem; margin-bottom: 14px; }
+    .qr-name { font-size: 1rem; font-weight: 900; color: var(--text); margin-bottom: 6px; }
+    .qr-desc { font-size: 0.87rem; color: var(--muted); margin-bottom: 16px; line-height: 1.6; }
+    .qr-price-old { font-size: 0.95rem; color: var(--muted); text-decoration: line-through; margin-bottom: 2px; }
+    .qr-price { font-size: 1.5rem; font-weight: 900; color: var(--brand); letter-spacing: -0.03em; }
+    .qr-price-sub { font-size: 0.82rem; color: var(--muted); }
+    /* FAMILY PRICING */
+    .family-pricing { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+    @media (max-width: 700px) { .family-pricing { grid-template-columns: 1fr; } }
+    .family-card { background: var(--white); border: 2px solid var(--brand2); border-radius: 24px; padding: 36px 32px; position: relative; }
+    .family-badge { position: absolute; top: -13px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, var(--accent), #d4a832); color: #fff; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 14px; border-radius: 20px; }
+    .family-name { font-size: 1.2rem; font-weight: 900; color: var(--text); margin-bottom: 6px; }
+    .family-tagline { font-size: 0.9rem; color: var(--muted); margin-bottom: 20px; }
+    .family-price-old { font-size: 1rem; color: var(--muted); text-decoration: line-through; margin-bottom: 4px; }
+    .family-price-new { font-size: 2.8rem; font-weight: 900; color: var(--brand); letter-spacing: -0.05em; line-height: 1; }
+    .family-price-per { font-size: 0.9rem; color: var(--muted); margin-bottom: 6px; }
+    .family-annual { font-size: 0.88rem; color: #2e7d32; font-weight: 700; margin-bottom: 24px; }
+    .family-list { list-style: none; display: flex; flex-direction: column; gap: 9px; margin-bottom: 28px; }
+    .family-list li { font-size: 0.9rem; color: var(--subtle); display: flex; gap: 9px; align-items: flex-start; }
+    .family-list li::before { content: '✓'; color: #43a047; font-weight: 900; flex-shrink: 0; }
+    .btn-primary { display: inline-block; background: linear-gradient(135deg, var(--brand), var(--brand2)); color: #fff; text-decoration: none; font-weight: 800; font-size: 0.97rem; padding: 14px 28px; border-radius: 14px; box-shadow: 0 8px 32px rgba(30,58,110,0.28); transition: transform 0.2s, box-shadow 0.2s; }
+    .btn-primary:hover { transform: translateY(-2px); }
+    .family-reasons { background: var(--bg); border: 1px solid var(--border); border-radius: 20px; padding: 28px 24px; }
+    .family-reasons h4 { font-size: 1rem; font-weight: 800; color: var(--text); margin-bottom: 18px; }
+    .reason { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 18px; }
+    .reason:last-child { margin-bottom: 0; }
+    .reason-icon { font-size: 1.4rem; flex-shrink: 0; }
+    .reason-title { font-size: 0.92rem; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+    .reason-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+    /* FAMILY 3-TIER */
+    .family-tiers-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 40px; }
+    @media (max-width: 850px) { .family-tiers-3 { grid-template-columns: 1fr; } }
+    .ftier-card { background: var(--white); border: 2px solid var(--border); border-radius: 24px; padding: 32px 28px; position: relative; transition: box-shadow 0.2s; }
+    .ftier-card:hover { box-shadow: 0 8px 40px rgba(30,58,110,0.1); }
+    .ftier-popular { border-color: var(--brand2); box-shadow: 0 16px 60px rgba(30,58,110,0.12); }
+    .ftier-name { font-size: 1.2rem; font-weight: 900; color: var(--text); margin-bottom: 6px; }
+    .ftier-tagline { font-size: 0.87rem; color: var(--muted); margin-bottom: 20px; }
+    .ftier-price { font-size: 2.8rem; font-weight: 900; color: var(--brand); letter-spacing: -0.05em; line-height: 1; }
+    .ftier-period { font-size: 0.9rem; color: var(--muted); margin-bottom: 24px; }
+    /* CTA */
+    .cta-banner { background: linear-gradient(135deg, var(--brand), var(--brand2)); border-radius: 28px; padding: 56px 48px; text-align: center; margin: 0 24px 72px; max-width: calc(1100px - 48px); margin-left: auto; margin-right: auto; }
+    @media (max-width: 600px) { .cta-banner { padding: 40px 24px; margin: 0 12px 48px; } }
+    .cta-banner h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 900; letter-spacing: -0.04em; color: #fff; margin-bottom: 14px; }
+    .cta-banner p { color: rgba(255,255,255,0.82); font-size: 1.1rem; margin-bottom: 36px; }
+    .cta-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn-white { display: inline-block; background: #fff; color: var(--brand); text-decoration: none; font-weight: 800; font-size: 0.97rem; padding: 14px 28px; border-radius: 14px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); transition: transform 0.2s; }
+    .btn-white:hover { transform: translateY(-2px); }
+    .btn-outline-white { display: inline-block; background: transparent; color: #fff; text-decoration: none; font-weight: 700; font-size: 0.97rem; padding: 14px 28px; border-radius: 14px; border: 2px solid rgba(255,255,255,0.4); transition: border-color 0.2s; }
+    .btn-outline-white:hover { border-color: #fff; }
+    /* FOOTER */
+    footer { background: var(--text); color: rgba(255,255,255,0.7); padding: 48px 24px 32px; }
+    .footer-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 32px; }
+    @media (max-width: 768px) { .footer-inner { grid-template-columns: 1fr 1fr; gap: 28px; } }
+    @media (max-width: 480px) { .footer-inner { grid-template-columns: 1fr; } }
+    .footer-brand { font-size: 1rem; font-weight: 900; color: #fff; margin-bottom: 10px; }
+    .footer-tagline { font-size: 0.85rem; line-height: 1.6; }
+    .footer-col-title { font-size: 0.82rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 14px; }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .footer-links a { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-links a:hover { color: #fff; }
+    .footer-bottom { max-width: 1100px; margin: 32px auto 0; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .footer-bottom p { font-size: 0.82rem; }
+    /* HIGHLIGHT BOX */
+    .highlight-box { background: rgba(200,145,42,0.08); border: 1px solid rgba(200,145,42,0.25); border-radius: 14px; padding: 16px 20px; margin-bottom: 28px; font-size: 0.9rem; color: var(--subtle); display: flex; gap: 10px; align-items: flex-start; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-icon">🧠</span>
+      <span>AI Lektor
+        <span class="nav-logo-sub">exaktních věd</span>
+      </span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Domů</a></li>
+      <li><a href="skoly.html">Pro školy</a></li>
+      <li><a href="rodiny.html">Pro rodiny</a></li>
+      <li class="nav-divider"></li>
+      <li><a href="cenik.html" class="active">Ceník</a></li>
+      <li><a href="kontakt.html" class="nav-cta">Kontakt</a></li>
+    </ul>
+    <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="page-label">💰 Transparentní ceník</div>
+    <h1 class="page-title">Cena, která <span>dává smysl</span></h1>
+    <p class="page-sub">Pro školy: od 24 Kč/žák/měsíc. Pro rodiny: od 99 Kč/měsíc. Bez skrytých poplatků.</p>
+  </div>
+</div>
+
+<!-- TAB SWITCHER -->
+<div class="tab-wrap">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('skoly')">🏫 Pro školy</button>
+    <button class="tab-btn" onclick="switchTab('qr')">📲 QR relace</button>
+    <button class="tab-btn" onclick="switchTab('rodiny')">👨‍👩‍👧 Pro rodiny</button>
+  </div>
+</div>
+
+<!-- ===== TAB: ŠKOLY ===== -->
+<div class="tab-content active" id="tab-skoly">
+  <div class="section">
+    <div class="section-label">Školní licence</div>
+    <h2 class="section-title">Vyberte velikost <span>školy</span></h2>
+    <p class="section-sub">Cena závisí na počtu žáků a intenzitě využití. Větší škola = nižší cena na žáka.</p>
+
+    <div class="pkg-selector">
+      <button class="pkg-btn active" onclick="switchSize('trida')">Třída (do 30 žáků)</button>
+      <button class="pkg-btn" onclick="switchSize('mala')">Malá škola (do 150 žáků)</button>
+      <button class="pkg-btn" onclick="switchSize('skola')">Škola (do 400 žáků)</button>
+    </div>
+
+    <!-- TŘÍDA -->
+    <div class="tier-group active" id="size-trida">
+      <div class="size-note">
+        <span class="size-note-icon">ℹ️</span>
+        <span>Licence pro jednu třídu (do 30 žáků). Ideální pro učitele, kteří chtějí AI Lektora zavést ve své třídě bez nutnosti schválení celou školou.</span>
+      </div>
+      <div class="tier-grid">
+        <div class="tier-card">
+          <div class="tier-name">Basic</div>
+          <div class="tier-tagline">Začínám s AI — nižší intenzita využití</div>
+          <div>
+            <div class="tier-price-main">899 Kč</div>
+            <div class="tier-price-period">/ měsíc</div>
+            <div class="tier-price-per">~30 Kč / žák / měsíc</div>
+            <div class="tier-annual-note">Ušetřete 5 % při ročním předplatném</div>
+          </div>
+          <ul class="tier-list">
+            <li>4 předměty a všechny věkové úrovně</li>
+            <li>Přístup 24/7 pro žáky</li>
+            <li>QR kód přístup do třídy</li>
+            <li>Statistiky využití pro vedení</li>
+          </ul>
+          <a href="kontakt.html" class="tier-cta tier-cta-secondary">Mám zájem</a>
+        </div>
+        <div class="tier-card popular">
+          <div class="tier-popular-badge">Nejoblíbenější</div>
+          <div class="tier-name">Standard</div>
+          <div class="tier-tagline">Aktivní využití a příprava na zkoušky</div>
+          <div>
+            <div class="tier-price-main">1 590 Kč</div>
+            <div class="tier-price-period">/ měsíc</div>
+            <div class="tier-price-per">~53 Kč / žák / měsíc</div>
+            <div class="tier-annual-note">Ušetřete 7 % při ročním předplatném</div>
+          </div>
+          <ul class="tier-list">
+            <li>Vše z Basic</li>
+            <li>Vyšší kapacita otázek</li>
+            <li>Email upozornění při 80 % kapacity</li>
+            <li>Možnost dokupu kapacity</li>
+          </ul>
+          <a href="kontakt.html" class="tier-cta tier-cta-primary">Mám zájem</a>
+        </div>
+        <div class="tier-card">
+          <div class="tier-name">Plus</div>
+          <div class="tier-tagline">Každodenní intenzivní příprava</div>
+          <div>
+            <div class="tier-price-main">2 490 Kč</div>
+            <div class="tier-price-period">/ měsíc</div>
+            <div class="tier-price-per">~83 Kč / žák / měsíc</div>
+            <div class="tier-annual-note">Ušetřete 10 % při ročním předplatném</div>
+          </div>
+          <ul class="tier-list">
+            <li>Vše ze Standard</li>
+            <li>Nejvyšší kapacita</li>
+            <li>Prioritní e-mailová podpora</li>
+            <li>Konzultace při nastavení</li>
+          </ul>
+          <a href="kontakt.html" class="tier-cta tier-cta-secondary">Mám zájem</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- MALÁ ŠKOLA -->
+    <div class="tier-group" id="size-mala">
+      <div class="size-note">
+        <span class="size-note-icon">ℹ️</span>
+        <span>Licence pro celou malou školu (do 150 žáků). Všichni žáci a učitelé mají přístup — v hodině i doma.</span>
+      </div>
+      <div class="tier-grid">
+        <div class="tier-card">
+          <div class="tier-name">Basic</div>
+          <div class="tier-tagline">Začínám s AI — nižší intenzita využití</div>
+          <div>
+            <div class="tier-price-main">3 490 Kč</div>
+            <div class="tier-price-period">/ měsíc</div>
+            <div class="tier-price-per">~23 Kč / žák / měsíc</div>
+            <div class="tier-annual-note">Ušetřete 5 % při ročním předplatném</div>
+          </div>
+          <ul class="tier-list">
+            <li>4 předměty a všechny věkové úrovně</li>
+            <li>Přístup 24/7 pro žáky i učitele</li>
+            <li>QR kód přístupy pro hodiny</li>
+            <li>Statistiky a reporting pro ředitele</li>
+          </ul>
+          <a href="kontakt.html" class="tier-cta tier-cta-secondary">Mám zájem</a>
+        </div>
+        <div class="tier-card popular">
+          <div class="tier-popular-badge">Nejoblíbenější</div>
+          <div class="tier-name">Standard</div>
+          <div class="tier-tagline">Aktivní využití a příprava na zkoušky</div>
+          <div>
+            <div class="tier-price-main">8 490 Kč</div>
+            <div class="tier-price-period">/ měsíc</div>
+            <div class="tier-price-per">~57 Kč / žák / měsíc</div>
+            <div class="tier-annual-note">Ušetřete 7 % při ročním předplatném</div>
+          </div>
+          <ul class="tier-list">
+            <li>Vše z Basic</li>
+            <li>Vyšší kapacita otázek</li>
+            <li>Email upozornění při 80 % kapacity</li>
+            <li>Možnost dokupu kapacity</li>
+          </ul>
+          <a href="kontakt.html" class="tier-cta tier-cta-primary">Mám zájem</a>
+        </div>
+        <div class="tier-card">
+          <div class="tier-name">Plus</div>
+          <div class="tier-tagline">Každodenní intenzivní příprava</div>
+          <div>
+            <div class="tier-price-main">12 990 Kč</div>
+            <div class="tier-price-period">/ měsíc</div>
+            <div class="tier-price-per">~87 Kč / žák / měsíc</div>
+            <div class="tier-annual-note">Ušetřete 10 % při ročním předplatném</div>
+          </div>
+          <ul class="tier-list">
+            <li>Vše ze Standard</li>
+            <li>Nejvyšší kapacita</li>
+            <li>Prioritní podpora a konzultace</li>
+          </ul>
+          <a href="kontakt.html" class="tier-cta tier-cta-secondary">Mám zájem</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ŠKOLA -->
+    <div class="tier-group" id="size-skola">
+      <div class="size-note">
+        <span class="size-note-icon">ℹ️</span>
+        <span>Licence pro celou školu (do 400 žáků). Nejnižší cena na žáka — od 20 Kč/měsíc. Roční ceny na vyžádání.</span>
+      </div>
+      <div class="tier-grid">
+        <div class="tier-card">
+          <div class="tier-name">Basic</div>
+          <div class="tier-tagline">Začínám s AI — nižší intenzita využití</div>
+          <div>
+            <div class="tier-price-main">9 490 Kč</div>
+            <div class="tier-price-period">/ měsíc</div>
+            <div class="tier-price-per">~24 Kč / žák / měsíc</div>
+            <div class="tier-annual-note">Ušetřete 5 % při ročním předplatném</div>
+          </div>
+          <ul class="tier-list">
+            <li>4 předměty a všechny věkové úrovně</li>
+            <li>Neomezený počet QR kódů</li>
+            <li>Pokročilé statistiky a reporting</li>
+            <li>Správa tříd a přístupových skupin</li>
+          </ul>
+          <a href="kontakt.html" class="tier-cta tier-cta-secondary">Nezávazná poptávka</a>
+        </div>
+        <div class="tier-card popular">
+          <div class="tier-popular-badge">Nejoblíbenější</div>
+          <div class="tier-name">Standard</div>
+          <div class="tier-tagline">Aktivní využití pro celou školu</div>
+          <div>
+            <div class="tier-price-main">21 490 Kč</div>
+            <div class="tier-price-period">/ měsíc</div>
+            <div class="tier-price-per">~54 Kč / žák / měsíc</div>
+            <div class="tier-annual-note">Ušetřete 7 % při ročním předplatném</div>
+          </div>
+          <ul class="tier-list">
+            <li>Vše z Basic</li>
+            <li>Vyšší kapacita otázek</li>
+            <li>Dedikovaný onboarding</li>
+            <li>Email upozornění + dokup kapacity</li>
+          </ul>
+          <a href="kontakt.html" class="tier-cta tier-cta-primary">Nezávazná poptávka</a>
+        </div>
+        <div class="tier-card">
+          <div class="tier-name">Plus</div>
+          <div class="tier-tagline">Maximální využití pro celou školu</div>
+          <div>
+            <div class="tier-price-main">33 990 Kč</div>
+            <div class="tier-price-period">/ měsíc</div>
+            <div class="tier-price-per">~85 Kč / žák / měsíc</div>
+            <div class="tier-annual-note">Ušetřete 10 % při ročním předplatném</div>
+          </div>
+          <ul class="tier-list">
+            <li>Vše ze Standard</li>
+            <li>Nejvyšší kapacita — žádné omezení v praxi</li>
+            <li>Prioritní podpora SLA</li>
+            <li>Konzultace a školení pro učitele</li>
+          </ul>
+          <a href="kontakt.html" class="tier-cta tier-cta-secondary">Nezávazná poptávka</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- FULL TABLE -->
+    <div style="margin-top: 56px;">
+      <h3 style="font-size:1.1rem; font-weight:800; color:var(--text); margin-bottom:20px;">Přehledná tabulka — všechny velikosti škol</h3>
+      <div class="sizes-table-wrap">
+        <table class="sizes-table">
+          <thead>
+            <tr>
+              <th>Velikost školy</th>
+              <th>Basic</th>
+              <th>Standard</th>
+              <th>Plus</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Třída</strong> (do 30 žáků)</td>
+              <td><span class="price-cell">899 Kč/měsíc</span><br><span class="perkid-cell">~30 Kč/žák</span></td>
+              <td><span class="price-cell">1 590 Kč/měsíc</span><br><span class="perkid-cell">~53 Kč/žák</span></td>
+              <td><span class="price-cell">2 490 Kč/měsíc</span><br><span class="perkid-cell">~83 Kč/žák</span></td>
+            </tr>
+            <tr>
+              <td><strong>Malá škola</strong> (do 150 žáků)</td>
+              <td><span class="price-cell">3 490 Kč/měsíc</span><br><span class="perkid-cell">~23 Kč/žák</span></td>
+              <td><span class="price-cell">8 490 Kč/měsíc</span><br><span class="perkid-cell">~57 Kč/žák</span></td>
+              <td><span class="price-cell">12 990 Kč/měsíc</span><br><span class="perkid-cell">~87 Kč/žák</span></td>
+            </tr>
+            <tr class="popular-row">
+              <td><strong>Škola</strong> (do 400 žáků)</td>
+              <td><span class="price-cell">9 490 Kč/měsíc</span><br><span class="perkid-cell">~24 Kč/žák</span></td>
+              <td><span class="price-cell">21 490 Kč/měsíc</span><br><span class="perkid-cell">~54 Kč/žák</span></td>
+              <td><span class="price-cell">33 990 Kč/měsíc</span><br><span class="perkid-cell">~85 Kč/žák</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin-top:14px; font-size:0.85rem; color:var(--muted);">Roční předplatné: úspora 5–10 %. Pro školy tier Standard/Plus sdělujeme roční cenu osobně na poptávku. Všechny ceny bez DPH.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TAB: QR RELACE ===== -->
+<div class="tab-content" id="tab-qr">
+  <div class="section">
+    <div class="section-label">QR kód — jednorázový přístup</div>
+    <h2 class="section-title">Přístup na <span>QR kód</span></h2>
+    <p class="section-sub">Celá třída se připojí naskenováním QR kódu — bez registrace, bez účtů. Platíte za relaci, ne za žáka.</p>
+
+    <div class="highlight-box">
+      <span>💡</span>
+      <span>QR relace jsou zpoplatněny od prvního použití. Demo pro vedení školy je zdarma — <a href="kontakt.html" style="color:var(--brand); font-weight:700;">napište nám</a> a zařídíme přístup k vyzkoušení.</span>
+    </div>
+
+    <div class="qr-grid">
+      <div class="qr-card">
+        <div class="qr-icon">⚡</div>
+        <div class="qr-name">Přístup na QR kód</div>
+        <div class="qr-desc">Jednorázová relace pro celou třídu (až 35 žáků). Ideální pro práci v hodině nebo suplování.</div>
+        <div class="qr-price-old">599 Kč</div>
+        <div class="qr-price">499 Kč</div>
+        <div class="qr-price-sub">za 1 relaci (až 35 žáků)</div>
+      </div>
+      <div class="qr-card">
+        <div class="qr-icon">📦</div>
+        <div class="qr-name">Balíček 10 relací</div>
+        <div class="qr-desc">Předplacených 10 relací — ideální pro občasné využití. Ušetříte oproti jednotlivým nákupům.</div>
+        <div class="qr-price">4 491 Kč</div>
+        <div class="qr-price-sub">449 Kč/relace — úspora 10 %</div>
+      </div>
+      <div class="qr-card">
+        <div class="qr-icon">🏷️</div>
+        <div class="qr-name">Balíček 40 relací</div>
+        <div class="qr-desc">Celý školní rok bez starostí. Vhodné pro školy, které QR kód využívají pravidelně každý týden.</div>
+        <div class="qr-price">15 900 Kč</div>
+        <div class="qr-price-sub">398 Kč/relace — úspora 20 %</div>
+      </div>
+      <div style="grid-column: 1 / -1; background: #f0f4ff; border: 1px solid #c7d5f0; border-radius: 14px; padding: 18px 22px; font-size: 0.88rem; color: #1e3a6e; line-height: 1.6;">
+        <strong>Potřebujete jiný časový rámec nebo nestandardní rozsah?</strong><br>
+        Standardní relace trvá 60 minut — pohodlně pokryje 45minutovou vyučovací hodinu. Pokud vaše škola potřebuje jiné uspořádání, rádi najdeme řešení na míru. <a href="kontakt.html" style="color: #c8912a; font-weight: 700;">Napište nám →</a>
+      </div>
+    </div>
+
+    <div class="size-note">
+      <span class="size-note-icon">ℹ️</span>
+      <span>Pro školy, které používají QR kód více než 2× týdně, vychází <strong>školní licence výhodněji</strong> — zahrnuje neomezené QR relace v rámci měsíčního poolu. Přejít na záložku Pro školy.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TAB: RODINY ===== -->
+<div class="tab-content" id="tab-rodiny">
+  <div class="section">
+    <div class="section-label">Rodinné předplatné</div>
+    <h2 class="section-title">Vyberte plán pro <span>svou rodinu</span></h2>
+    <p class="section-sub">Jeden účet pro všechny děti. Bez překvapení na faktuře.</p>
+
+    <div class="family-tiers-3">
+      <div class="ftier-card">
+        <div class="ftier-name">Basic</div>
+        <div class="ftier-tagline">Pro 1 dítě a příležitostné použití</div>
+        <div class="ftier-price">99 Kč</div>
+        <div class="ftier-period">/ měsíc</div>
+        <ul class="tier-list" style="padding-top:20px;border-top:1px solid var(--border);margin-bottom:24px;">
+          <li>4 předměty — matematika, fyzika, biologie, chemie</li>
+          <li>1. třída až maturita</li>
+          <li>Přístup pro celou rodinu</li>
+          <li>Chat 24/7 — mobil, tablet, počítač</li>
+          <li>Zrušení kdykoliv</li>
+        </ul>
+        <a href="objednat.html?plan=basic&typ=rodiny" class="tier-cta tier-cta-secondary">Začít →</a>
+      </div>
+      <div class="ftier-card ftier-popular">
+        <div class="tier-popular-badge">Nejoblíbenější</div>
+        <div class="ftier-name">Standard</div>
+        <div class="ftier-tagline">Pro aktivní rodinu s 1–2 dětmi</div>
+        <div class="ftier-price">199 Kč</div>
+        <div class="ftier-period">/ měsíc</div>
+        <ul class="tier-list" style="padding-top:20px;border-top:1px solid var(--border);margin-bottom:24px;">
+          <li>Vše z Basic</li>
+          <li>Přístup pro celou rodinu</li>
+          <li>2× vyšší kapacita otázek</li>
+          <li>Pravidelné používání bez obav</li>
+          <li>Možnost dokupu kapacity</li>
+        </ul>
+        <a href="objednat.html?plan=standard&typ=rodiny" class="tier-cta tier-cta-primary">Začít →</a>
+      </div>
+      <div class="ftier-card">
+        <div class="ftier-name">Plus</div>
+        <div class="ftier-tagline">Neomezené otázky pro celou rodinu</div>
+        <div class="ftier-price">299 Kč</div>
+        <div class="ftier-period">/ měsíc</div>
+        <ul class="tier-list" style="padding-top:20px;border-top:1px solid var(--border);margin-bottom:24px;">
+          <li>Vše ze Standard</li>
+          <li>Neomezené otázky</li>
+          <li>Ideální pro přípravu na přijímačky a maturitu</li>
+          <li>Žádné překvapení na faktuře</li>
+        </ul>
+        <a href="objednat.html?plan=plus&typ=rodiny" class="tier-cta tier-cta-secondary">Začít →</a>
+      </div>
+    </div>
+    <div class="family-reasons" style="max-width:780px;margin:32px auto 0;">
+      <h4>Proč AI Lektor stojí za to</h4>
+      <div class="reason">
+        <span class="reason-icon">🌙</span>
+        <div>
+          <div class="reason-title">Dostupné ve 22:00</div>
+          <div class="reason-desc">Žádné čekání na doučovatele. AI Lektor je tu den před písemkou, o víkendu i o prázdninách.</div>
+        </div>
+      </div>
+      <div class="reason">
+        <span class="reason-icon">💬</span>
+        <div>
+          <div class="reason-title">Ptá se bez ostychu</div>
+          <div class="reason-desc">Ve třídě by ruku nezvedlo. S AI Lektorem se ptá opakovaně, bez studu, dokud nepochopí.</div>
+        </div>
+      </div>
+      <div class="reason">
+        <span class="reason-icon">🎯</span>
+        <div>
+          <div class="reason-title">Méně než jedno doučování</div>
+          <div class="reason-desc">Průměrné doučování stojí 350–500 Kč/hod. AI Lektor je dostupný celý měsíc od 99 Kč.</div>
+        </div>
+      </div>
+      <div class="reason">
+        <span class="reason-icon">🧠</span>
+        <div>
+          <div class="reason-title">Učí, nepíše za dítě</div>
+          <div class="reason-desc">Lektor vede dítě k pochopení — vysvětlí, ukáže, pak nechá zkusit. Skutečné učení, ne opisování.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider" />
+
+<!-- CTA -->
+<div class="cta-banner">
+  <h2>Máte otázky k cenám?</h2>
+  <p>Pro školy připravíme individuální nabídku. Rodiny mohou začít zdarma hned teď.</p>
+  <div class="cta-btns">
+    <a href="kontakt.html" class="btn-white">Poptávka pro školu →</a>
+    <a href="https://azqkj8fjpkhqhlvzeqtcyj.streamlit.app/" class="btn-outline-white">Začít jako rodina</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">🧠 AI Lektor exaktních věd</div>
+      <p class="footer-tagline">Česky. Podle osnov. Kdykoliv.<br/>Matematika, fyzika, biologie, chemie.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">Produkt</div>
+      <ul class="footer-links">
+        <li><a href="skoly.html">Pro školy</a></li>
+        <li><a href="rodiny.html">Pro rodiny</a></li>
+        <li><a href="cenik.html">Ceník</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Předměty</div>
+      <ul class="footer-links">
+        <li><a href="#">Matematika</a></li>
+        <li><a href="#">Fyzika</a></li>
+        <li><a href="#">Biologie</a></li>
+        <li><a href="#">Chemie</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Kontakt</div>
+      <ul class="footer-links">
+        <li><a href="mailto:info@ai-lektor.cz">info@ai-lektor.cz</a></li>
+        <li><a href="kontakt.html">Kontaktní formulář</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Právní</div>
+      <ul class="footer-links">
+        <li><a href="podminky.html">Obchodní podmínky</a></li>
+        <li><a href="soukromi.html">Ochrana osobních údajů</a></li>
+        <li><a href="aup.html">Podmínky použití AI</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 AI Lektor exaktních věd. Všechna práva vyhrazena.</p>
+    <p style="display:flex; gap:16px; flex-wrap:wrap; justify-content:flex-end;">
+      <a href="podminky.html" style="color:rgba(255,255,255,0.5); text-decoration:none; font-size:0.82rem;">Obchodní podmínky</a>
+      <a href="soukromi.html" style="color:rgba(255,255,255,0.5); text-decoration:none; font-size:0.82rem;">Ochrana osobních údajů</a>
+      <a href="aup.html" style="color:rgba(255,255,255,0.5); text-decoration:none; font-size:0.82rem;">Podmínky použití AI</a>
+    </p>
+  </div>
+</footer>
+
+<script>
+  const hamburger = document.getElementById('hamburger');
+  const navLinks = document.getElementById('navLinks');
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    navLinks.classList.toggle('open');
+  });
+
+  function switchTab(name) {
+    document.querySelectorAll('.tab-btn').forEach((b, i) => {
+      b.classList.toggle('active', ['skoly','qr','rodiny'][i] === name);
+    });
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+  }
+
+  // Otevři správnou záložku podle URL hash (např. cenik.html#rodiny)
+  const hashTab = window.location.hash.replace('#', '');
+  if (['skoly', 'qr', 'rodiny'].includes(hashTab)) {
+    switchTab(hashTab);
+  }
+
+  function switchSize(size) {
+    document.querySelectorAll('.pkg-btn').forEach((b, i) => {
+      b.classList.toggle('active', ['trida','mala','skola'][i] === size);
+    });
+    document.querySelectorAll('.tier-group').forEach(g => g.classList.remove('active'));
+    document.getElementById('size-' + size).classList.add('active');
+  }
+</script>
+</body>
+</html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    

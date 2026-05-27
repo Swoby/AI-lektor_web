@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kontakt — AI Lektor exaktních věd</title>
+  <meta name="description" content="Napište nám — pro školy i rodiny. Odpovídáme do 24 hodin. ailektor.info@gmail.com" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --brand: #1e3a6e; --brand2: #2a5298; --accent: #c8912a;
+      --bg: #f5f2ec; --border: rgba(30,58,110,0.13);
+      --text: #1a2535; --muted: #5a6a7d; --subtle: #374151; --white: #ffffff;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; min-height: 100vh; }
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(245,242,236,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 24px; }
+    .nav-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px; gap: 16px; }
+    .nav-logo { font-size: 1rem; font-weight: 900; letter-spacing: -0.02em; color: var(--text); text-decoration: none; white-space: nowrap; display: flex; align-items: center; gap: 8px; }
+    .nav-logo-icon { font-size: 1.4rem; }
+    .nav-logo-sub { font-size: 0.7rem; font-weight: 600; color: var(--muted); letter-spacing: 0.04em; display: block; line-height: 1; }
+    .nav-links { display: flex; gap: 4px; list-style: none; }
+    .nav-links a { color: var(--subtle); text-decoration: none; font-size: 0.88rem; font-weight: 600; padding: 6px 12px; border-radius: 8px; transition: color 0.2s, background 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--brand); background: rgba(30,58,110,0.08); }
+    .nav-cta { background: linear-gradient(135deg, var(--brand), var(--brand2)) !important; color: #fff !important; border-radius: 10px !important; padding: 7px 16px !important; }
+    .nav-cta.active { background: linear-gradient(135deg, var(--brand), var(--brand2)) !important; color: #fff !important; }
+    .nav-divider { width: 1px; height: 18px; background: var(--border); margin: 0 4px; align-self: center; flex-shrink: 0; }
+    .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 6px; }
+    .nav-hamburger span { display: block; width: 24px; height: 2px; background: var(--text); border-radius: 2px; transition: all 0.3s; }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    @media (max-width: 768px) {
+      nav { position: fixed; top: 0; left: 0; right: 0; }
+      body { padding-top: 64px; }
+      .nav-hamburger { display: flex; }
+      .nav-links { display: none; flex-direction: column; gap: 4px; position: fixed; top: 64px; left: 0; right: 0; background: rgba(245,242,236,0.98); border-bottom: 1px solid var(--border); padding: 12px 16px 18px; z-index: 99; }
+      .nav-links.open { display: flex; }
+      .nav-links li.nav-divider { display: none; }
+      .nav-links a { font-size: 1rem; padding: 10px 14px; }
+    }
+    /* PAGE HEADER */
+    .page-header { max-width: 1100px; margin: 0 auto; padding: 64px 24px 48px; }
+    .section-label { display: inline-flex; align-items: center; gap: 10px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--brand); margin-bottom: 10px; }
+    .section-label::before { content: ''; display: block; width: 28px; height: 2px; background: linear-gradient(90deg, var(--brand), var(--brand2)); border-radius: 2px; }
+    .page-title { font-size: clamp(2rem, 5vw, 3rem); font-weight: 900; letter-spacing: -0.04em; color: var(--text); margin-bottom: 16px; }
+    .page-title span { color: var(--accent); }
+    .page-sub { color: var(--subtle); font-size: 1.1rem; max-width: 640px; }
+    .divider { border: none; border-top: 1px solid var(--border); margin: 0; }
+    .section-wrap { max-width: 1100px; margin: 0 auto; padding: 64px 24px 80px; }
+    /* CONTACT GRID */
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+    @media (max-width: 768px) { .contact-grid { grid-template-columns: 1fr; } }
+    /* LEFT */
+    .contact-info h2 { font-size: 1.6rem; font-weight: 900; letter-spacing: -0.03em; color: var(--text); margin-bottom: 14px; }
+    .contact-info p { color: var(--subtle); font-size: 0.97rem; margin-bottom: 28px; line-height: 1.8; }
+    .contact-items { display: flex; flex-direction: column; gap: 14px; margin-bottom: 32px; }
+    .contact-item { display: flex; align-items: center; gap: 16px; background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 18px 20px; }
+    .contact-item-icon { width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, var(--brand), var(--brand2)); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1.2rem; }
+    .contact-item-label { font-size: 0.78rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 3px; }
+    .contact-item-value { font-size: 0.97rem; color: var(--text); font-weight: 700; }
+    .contact-item-value a { color: var(--text); text-decoration: none; }
+    .contact-item-value a:hover { color: var(--brand); }
+    .info-card { background: linear-gradient(135deg, rgba(30,58,110,0.07), rgba(42,82,152,0.04)); border: 1px solid rgba(30,58,110,0.18); border-radius: 20px; padding: 24px; }
+    .info-card h4 { font-size: 1rem; font-weight: 800; color: var(--text); margin-bottom: 14px; }
+    .info-list { list-style: none; display: flex; flex-direction: column; gap: 11px; }
+    .info-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 0.91rem; color: var(--subtle); line-height: 1.55; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: linear-gradient(135deg, var(--brand), var(--brand2)); flex-shrink: 0; margin-top: 6px; }
+    /* AUDIENCE SELECTOR */
+    .audience-tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+    .aud-btn { flex: 1; padding: 10px 8px; border-radius: 10px; border: 2px solid var(--border); background: var(--white); font-size: 0.88rem; font-weight: 700; cursor: pointer; color: var(--muted); transition: all 0.2s; text-align: center; }
+    .aud-btn.active { border-color: var(--brand2); color: var(--brand); background: rgba(30,58,110,0.06); }
+    /* FORM */
+    .contact-form-wrap { background: var(--white); border: 1px solid var(--border); border-radius: 24px; padding: 36px 32px; }
+    @media (max-width: 480px) { .contact-form-wrap { padding: 24px 20px; } }
+    .contact-form-wrap h3 { font-size: 1.25rem; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+    .contact-form-wrap .form-tagline { font-size: 0.92rem; color: var(--muted); margin-bottom: 24px; }
+    .form-group { display: grid; gap: 7px; margin-bottom: 18px; }
+    .form-group label { font-size: 0.9rem; font-weight: 700; color: var(--text); }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; border: 1px solid rgba(30,58,110,0.18); border-radius: 12px;
+      padding: 13px 16px; font-size: 0.95rem; background: var(--bg); color: var(--text);
+      outline: none; font-family: inherit; transition: border-color 0.2s, box-shadow 0.2s; resize: vertical;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      border-color: var(--brand); box-shadow: 0 0 0 3px rgba(30,58,110,0.12);
+    }
+    .form-group textarea { min-height: 110px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 500px) { .form-row { grid-template-columns: 1fr; } }
+    .submit-btn { width: 100%; border: none; border-radius: 14px; padding: 15px; font-size: 1rem; font-weight: 800; background: linear-gradient(135deg, var(--brand), var(--brand2)); color: #fff; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 8px 32px rgba(30,58,110,0.28); }
+    .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(30,58,110,0.38); }
+    .form-note { font-size: 0.82rem; color: var(--muted); margin-top: 12px; text-align: center; }
+    .success-msg { display: none; background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); border-radius: 14px; padding: 20px 22px; margin-top: 16px; color: #15803d; font-size: 0.95rem; line-height: 1.6; }
+    /* FAQ */
+    .faq-section { margin-top: 72px; }
+    .faq-section h2 { font-size: 1.6rem; font-weight: 900; letter-spacing: -0.03em; color: var(--text); margin-bottom: 28px; }
+    .faq-section h2 span { color: var(--accent); }
+    .faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 700px) { .faq-grid { grid-template-columns: 1fr; } }
+    .faq-item { background: var(--white); border: 1px solid var(--border); border-radius: 18px; padding: 24px; }
+    .faq-item h4 { font-size: 0.97rem; font-weight: 800; color: var(--text); margin-bottom: 10px; display: flex; align-items: flex-start; gap: 10px; }
+    .faq-item h4 .faq-icon { font-size: 1.1rem; flex-shrink: 0; }
+    .faq-item p { font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
+    /* FOOTER */
+    footer { background: var(--text); color: rgba(255,255,255,0.7); padding: 48px 24px 32px; }
+    .footer-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 32px; }
+    @media (max-width: 768px) { .footer-inner { grid-template-columns: 1fr 1fr; gap: 28px; } }
+    @media (max-width: 480px) { .footer-inner { grid-template-columns: 1fr; } }
+    .footer-brand { font-size: 1rem; font-weight: 900; color: #fff; margin-bottom: 10px; }
+    .footer-tagline { font-size: 0.85rem; line-height: 1.6; }
+    .footer-col-title { font-size: 0.82rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 14px; }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .footer-links a { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+    .footer-links a:hover { color: #fff; }
+    .footer-bottom { max-width: 1100px; margin: 32px auto 0; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .footer-bottom p { font-size: 0.82rem; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-icon">🧠</span>
+      <span>AI Lektor
+        <span class="nav-logo-sub">exaktních věd</span>
+      </span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Domů</a></li>
+      <li><a href="skoly.html">Pro školy</a></li>
+      <li><a href="rodiny.html">Pro rodiny</a></li>
+      <li class="nav-divider"></li>
+      <li><a href="cenik.html">Ceník</a></li>
+      <li><a href="kontakt.html" class="nav-cta active">Kontakt</a></li>
+    </ul>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="section-label">Kontakt</div>
+  <h1 class="page-title">Napište nám. <span>Ozveme se do 24 hodin.</span></h1>
+  <p class="page-sub">Pro školy připravíme individuální nabídku a zařídíme přístup k bezplatnému vyzkoušení. Rodiny mohou začít přímo — <a href="https://azqkj8fjpkhqhlvzeqtcyj.streamlit.app/" style="color:var(--brand); font-weight:700;">zde je odkaz na aplikaci</a>.</p>
+</div>
+
+<hr class="divider" />
+
+<div class="section-wrap">
+  <div class="contact-grid">
+
+    <!-- LEVÝ SLOUPEC -->
+    <div>
+      <div class="contact-info">
+        <h2>AI Lektor exaktních věd</h2>
+        <p>Specializovaný AI tutor pro česká vzdělávací zařízení. Reagujeme na všechny poptávky — od jedné třídy po celou školu.</p>
+      </div>
+
+      <div class="contact-items">
+        <div class="contact-item">
+          <div class="contact-item-icon">✉️</div>
+          <div>
+            <div class="contact-item-label">E-mail</div>
+            <div class="contact-item-value"><a href="mailto:ailektor.info@gmail.com">ailektor.info@gmail.com</a></div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">⏱️</div>
+          <div>
+            <div class="contact-item-label">Doba odpovědi</div>
+            <div class="contact-item-value">Do 24 hodin v pracovní dny</div>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-icon">🌍</div>
+          <div>
+            <div class="contact-item-label">Data a provoz</div>
+            <div class="contact-item-value">EU servery (Frankfurt) · GDPR</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <h4>Co se stane po odeslání formuláře</h4>
+        <ul class="info-list">
+          <li><span class="dot"></span>Do 24 hodin se vám ozveme na e-mail</li>
+          <li><span class="dot"></span>Pro školy: pošleme přístup k bezplatnému demo účtu</li>
+          <li><span class="dot"></span>Domluvíme krátký online call (15–30 min) — bez závazků</li>
+          <li><span class="dot"></span>Připravíme nabídku na míru podle velikosti a potřeb školy</li>
+          <li><span class="dot"></span>Pilotní hodinu spustíte do týdne od prvního kontaktu</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- PRAVÝ SLOUPEC — FORMULÁŘ -->
+    <div class="contact-form-wrap">
+      <h3>Kontaktní formulář</h3>
+      <p class="form-tagline">Vyberte, kdo jste — zobrazíme relevantní otázky.</p>
+
+      <div class="audience-tabs">
+        <button class="aud-btn active" id="audSkola" onclick="setAudience('skola')">🏫 Škola / učitel</button>
+        <button class="aud-btn" id="audRodic" onclick="setAudience('rodic')">👨‍👩‍👧 Rodič / student</button>
+      </div>
+
+      <form id="contactForm" name="contact" method="POST" data-netlify="true" onsubmit="handleSubmit(event)">
+        <input type="hidden" name="form-name" value="contact" />
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name">Jméno a příjmení *</label>
+            <input type="text" id="name" name="name" placeholder="Jana Nováková" required />
+          </div>
+          <div class="form-group">
+            <label for="email">E-mail *</label>
+            <input type="email" id="email" name="email" placeholder="jana@skola.cz" required />
+          </div>
+        </div>
+
+        <!-- ŠKOLA FIELDS -->
+        <div id="skolaFields">
+          <div class="form-group">
+            <label for="schoolName">Název školy *</label>
+            <input type="text" id="schoolName" name="schoolName" placeholder="ZŠ a MŠ Praha 6" />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="schoolSize">Počet žáků</label>
+              <select id="schoolSize" name="schoolSize">
+                <option value="" disabled selected>Vyberte</option>
+                <option value="trida">Třída (do 30 žáků)</option>
+                <option value="mala">Malá škola (do 150 žáků)</option>
+                <option value="stredni">Škola (do 400 žáků)</option>
+                <option value="velka">Velká škola (400+)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="interest">Zájem o</label>
+              <select id="interest" name="interest">
+                <option value="" disabled selected>Vyberte</option>
+                <option value="demo">Demo přístup zdarma</option>
+                <option value="pilot">Pilotní hodina</option>
+                <option value="licence">Školní licence</option>
+                <option value="qr">QR kód relace</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- RODIČ FIELDS -->
+        <div id="rodicFields" style="display:none;">
+          <div class="form-group">
+            <label for="childClass">Třída / ročník dítěte</label>
+            <select id="childClass" name="childClass">
+              <option value="" disabled selected>Vyberte</option>
+              <option value="1st">1. stupeň ZŠ (3.–5. třída)</option>
+              <option value="2nd">2. stupeň ZŠ (6.–9. třída)</option>
+              <option value="ss">Střední škola</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="subject">Předmět</label>
+            <select id="subject" name="subject">
+              <option value="" disabled selected>Primárně zájem o</option>
+              <option value="mat">Matematika</option>
+              <option value="fyz">Fyzika</option>
+              <option value="bio">Biologie</option>
+              <option value="chem">Chemie</option>
+              <option value="vice">Více předmětů</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="message">Vaše zpráva</label>
+          <textarea id="message" name="message" placeholder="Popište vaši situaci nebo otázky — čím více víme, tím lépe vám poradíme."></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn">Odeslat poptávku →</button>
+        <p class="form-note">🔒 Vaše data jsou v bezpečí. Nepřeposíláme je třetím stranám.</p>
+        <div class="success-msg" id="successMsg">
+          ✅ <strong>Zpráva odeslána!</strong> Ozveme se vám do 24 hodin na zadaný e-mail. Pro školy zároveň připravíme demo přístup.
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- FAQ SEKCE -->
+  <div class="faq-section">
+    <h2>Nejčastější otázky před <span>prvním kontaktem</span></h2>
+    <div class="faq-grid">
+      <div class="faq-item">
+        <h4><span class="faq-icon">🆓</span>Je demo pro školy opravdu zdarma?</h4>
+        <p>Ano. Přístup pro vedení školy (ředitel, zástupce) je plně zdarma a bez časového omezení. QR kódy pro žáky jsou zpoplatněny od prvního použití. Demo vám zařídíme do 24 hodin od kontaktu.</p>
+      </div>
+      <div class="faq-item">
+        <h4><span class="faq-icon">⏰</span>Jak rychle lze spustit pilotní hodinu?</h4>
+        <p>Většinou do týdne. Pošleme vám přístup, vy si ho vyzkoušíte, domluvíme 15minutový call, vygenerujeme QR kódy a máte vše připraveno. Žádná instalace, žádné IT oddělení.</p>
+      </div>
+      <div class="faq-item">
+        <h4><span class="faq-icon">💳</span>Jak probíhá platba pro školy?</h4>
+        <p>Platba kartou nebo převodem. Školy dostávají fakturu s 14denní splatností. Roční předplatné je možné — přináší úsporu 20–26 %. Roční ceny sdělujeme individuálně při poptávce.</p>
+      </div>
+      <div class="faq-item">
+        <h4><span class="faq-icon">🔒</span>Co s osobními údaji žáků?</h4>
+        <p>Neukládáme žádné osobní údaje žáků. Přístup přes QR kód je anonymní — žáci se neregistrují. Logujeme pouze anonymizované statistiky (počty dotazů, témata). Servery v EU, GDPR compliance.</p>
+      </div>
+      <div class="faq-item">
+        <h4><span class="faq-icon">📚</span>Jaké předměty a ročníky jsou dostupné?</h4>
+        <p>Matematika, fyzika, biologie, chemie. Od 3. třídy ZŠ po 4. ročník střední školy. Každý předmět má věkové úrovně s odpovídajícím tónem a obsahem — podle aktuálních českých osnov.</p>
+      </div>
+      <div class="faq-item">
+        <h4><span class="faq-icon">📈</span>Co když žáci vyčerpají měsíční kapacitu?</h4>
+        <p>Škola dostane e-mail při dosažení 50 % kapacity. Po vyčerpání limitu přejdou žáci do omezeného režimu — mohou pokračovat s nižší kapacitou. Škola může dokoupit kapacitu nebo přejít na vyšší balíček.</p>
+      </div>
+      <div class="faq-item">
+        <h4><span class="faq-icon">🏠</span>Mohou žáci používat AI Lektora i doma?</h4>
+        <p>Ano — při školní licenci mají žáci přístup 24/7, ve škole i doma. QR kód relace mají platnost 1–24 hodin dle nastavení. Rodiny si mohou pořídit i samostatné rodinné předplatné za 99 Kč/měsíc.</p>
+      </div>
+      <div class="faq-item">
+        <h4><span class="faq-icon">🤝</span>Nabízíte školení pro učitele?</h4>
+        <p>V balíčku Intenzivní je zahrnuta konzultace při nastavení. Pro ostatní balíčky připravujeme online onboarding materiály. Rádi se domluvíme i na individuálním školení — kontaktujte nás.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">🧠 AI Lektor exaktních věd</div>
+      <p class="footer-tagline">Česky. Podle osnov. Kdykoliv.<br/>Matematika, fyzika, biologie, chemie.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">Produkt</div>
+      <ul class="footer-links">
+        <li><a href="skoly.html">Pro školy</a></li>
+        <li><a href="rodiny.html">Pro rodiny</a></li>
+        <li><a href="cenik.html">Ceník</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Předměty</div>
+      <ul class="footer-links">
+        <li><a href="#">Matematika</a></li>
+        <li><a href="#">Fyzika</a></li>
+        <li><a href="#">Biologie</a></li>
+        <li><a href="#">Chemie</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Kontakt</div>
+      <ul class="footer-links">
+        <li><a href="mailto:ailektor.info@gmail.com">ailektor.info@gmail.com</a></li>
+        <li><a href="kontakt.html">Kontaktní formulář</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Právní</div>
+      <ul class="footer-links">
+        <li><a href="podminky.html">Obchodní podmínky</a></li>
+        <li><a href="soukromi.html">Ochrana osobních údajů</a></li>
+        <li><a href="aup.html">Podmínky použití AI</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 AI Lektor exaktních věd. Všechna práva vyhrazena.</p>
+    <p style="display:flex; gap:16px; flex-wrap:wrap; justify-content:flex-end;">
+      <a href="podminky.html" style="color:rgba(255,255,255,0.5); text-decoration:none; font-size:0.82rem;">Obchodní podmínky</a>
+      <a href="soukromi.html" style="color:rgba(255,255,255,0.5); text-decoration:none; font-size:0.82rem;">Ochrana osobních údajů</a>
+      <a href="aup.html" style="color:rgba(255,255,255,0.5); text-decoration:none; font-size:0.82rem;">Podmínky použití AI</a>
+    </p>
+  </div>
+</footer>
+
+<script>
+  const hamburger = document.getElementById('navHamburger');
+  const navLinks = document.getElementById('navLinks');
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    navLinks.classList.toggle('open');
+  });
+
+  function setAudience(type) {
+    document.getElementById('audSkola').classList.toggle('active', type === 'skola');
+    document.getElementById('audRodic').classList.toggle('active', type === 'rodic');
+    document.getElementById('skolaFields').style.display = type === 'skola' ? 'block' : 'none';
+    document.getElementById('rodicFields').style.display = type === 'rodic' ? 'block' : 'none';
+    document.getElementById('email').placeholder = type === 'skola' ? 'jana@skola.cz' : 'jana@email.cz';
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = document.querySelector('.submit-btn');
+    btn.textContent = 'Odesílám...';
+    btn.disabled = true;
+
+    const formData = new FormData(e.target);
+
+    fetch('/kontakt', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(formData).toString()
+    })
+    .then(() => {
+      document.getElementById('contactForm').style.opacity = '0.4';
+      document.getElementById('contactForm').style.pointerEvents = 'none';
+      document.getElementById('successMsg').style.display = 'block';
+      btn.textContent = '✓ Odesláno';
+    })
+    .catch(() => {
+      btn.textContent = 'Chyba — zkuste znovu';
+      btn.disabled = false;
+    });
+  }
+</script>
+</body>
+</html>
