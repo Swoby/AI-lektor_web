@@ -69,7 +69,7 @@ exports.handler = async (event) => {
   const confirmToken = generateToken();
   const confirmLink  = `https://ai-lektor.cz/.netlify/functions/confirm-payment?token=${confirmToken}`;
 
-  if (SUPABASE_URL && SUPABASE_KEY && isPrevod) {
+  if (SUPABASE_URL && SUPABASE_KEY && payment_method === 'prevod') {
     try {
       await fetch(`${SUPABASE_URL}/rest/v1/payment_tokens`, {
         method: 'POST',
