@@ -49,6 +49,22 @@ exports.handler = async (event) => {
   const SUPABASE_URL    = process.env.SUPABASE_URL;
   const SUPABASE_KEY    = process.env.SUPABASE_KEY;
 
+  // Ulož email do leads tabulky
+  if (SUPABASE_URL && SUPABASE_KEY) {
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/leads`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal',
+        },
+        body: JSON.stringify({ email: email_login, session_id: 'objednavka-' + vs }),
+      });
+    } catch(e) { console.log('Leads save error:', e.message); }
+  }
+
   // Generuj potvrzovací token a ulož do Supabase
   const confirmToken = generateToken();
   const confirmLink  = `https://ai-lektor.cz/.netlify/functions/confirm-payment?token=${confirmToken}`;
