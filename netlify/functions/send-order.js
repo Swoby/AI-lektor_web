@@ -4,8 +4,14 @@
 //   RESEND_API_KEY   = re_euysR5kQ_...
 //   RESEND_FROM      = noreply@ai-lektor.cz
 //   NOTIFY_EMAIL     = ailektor.info@gmail.com
+//   SUPABASE_URL     = https://xxx.supabase.co
+//   SUPABASE_KEY     = service_role klíč
 
 const RESEND_API = 'https://api.resend.com/emails';
+
+function generateToken() {
+  return Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2) + Date.now().toString(36);
+}
 
 exports.handler = async (event) => {
   // Pouze POST
@@ -37,9 +43,29 @@ exports.handler = async (event) => {
     payment_method,
   } = data;
 
-  const RESEND_API_KEY = process.env.RESEND_API_KEY;
-  const FROM          = process.env.RESEND_FROM || 'AI Lektor <noreply@ai-lektor.cz>';
-  const NOTIFY_EMAIL  = process.env.NOTIFY_EMAIL || 'ailektor.info@gmail.com';
+  const RESEND_API_KEY  = process.env.RESEND_API_KEY;
+  const FROM            = process.env.RESEND_FROM || 'AI Lektor <noreply@ai-lektor.cz>';
+  const NOTIFY_EMAIL    = process.env.NOTIFY_EMAIL || 'ailektor.info@gmail.com';
+  const SUPABASE_URL    = process.env.SUPABASE_URL;
+  const SUPABASE_KEY    = process.env.SUPABASE_KEY;
+
+  // Generuj potvrzovací token a ulož do Supabase
+  const confirmToken = generateToken();
+  const confirmLink  = `https://ai-lektor.cz/.netlify/functions/confirm-payment?token=${confirmToken}`;
+
+  if (SUPABASE_URL && SUPABASE_KEY && isPrevod) {
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/payment_tokens`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token: confirmToken, email: email_login, vs }),
+      });
+    } catch(e) { console.log('Supabase token save error:', e.message); }
+  }
 
   console.log('DEBUG: RESEND_API_KEY set?', !!RESEND_API_KEY);
   console.log('DEBUG: FROM =', FROM);
@@ -146,14 +172,22 @@ exports.handler = async (event) => {
 
   // ── EMAIL PROVOZOVATELI (notifikace) ──────────────────────────────────────
   const bodyNotify = `
-<div style="font-family:monospace;background:#f0f0f0;padding:20px;border-radius:10px;">
-  <b>🛒 NOVÁ OBJEDNÁVKA</b><br><br>
+<div style="font-family:'Segoe UI',sans-serif;background:#f0f0f0;padding:20px;border-radius:10px;max-width:500px;">
+  <b style="font-size:1.1rem;">🛒 NOVÁ OBJEDNÁVKA</b><br><br>
   Plán: <b>${plan_name} — ${plan_typ}</b><br>
   Cena: <b>${formattedPrice}/měs.</b><br>
   Platba: <b>${payment_method}</b><br>
   VS: <b>${vs}</b><br><br>
   Login email: ${email_login}<br>
-  Notif email: ${email_notif || email_login}<br>
+  Notif email: ${email_notif || email_login}<br><br>
+  ${isPrevod ? `
+  <div style="margin-top:16px;">
+    <a href="${confirmLink}" style="display:inline-block;background:#1e3a6e;color:#fff;padding:14px 28px;border-radius:10px;text-decoration:none;font-weight:800;font-size:1rem;">
+      ✅ Potvrdit přijetí platby
+    </a>
+    <p style="font-size:0.8rem;color:#888;margin-top:8px;">Kliknutím aktivuješ přístup zákazníkovi na 30 dní.</p>
+  </div>
+  ` : ''}
 </div>
 `;
 
