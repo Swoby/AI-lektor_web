@@ -491,7 +491,7 @@
 <div class="bg-light">
   <div class="section">
     <div class="section-label">Reference</div>
-    <h2 class="section-title">Co říkají rodiče,<br><span>učitelé a studenti.</span></h2>
+    <h2 class="section-title">Co říkají rodiče<br><span>a studenti.</span></h2>
     <p class="section-sub">Zkušenosti z pilotního provozu — různé předměty, různé věkové skupiny.</p>
     <div class="reviews-grid">
       <div class="review-card">
@@ -503,18 +503,6 @@
             <div class="review-name">Lucie M.</div>
             <div class="review-role">Maminka, syn v 6. třídě</div>
             <span class="review-badge" style="background:#eff6ff;color:#1e3a6e;">🧮 Matematika</span>
-          </div>
-        </div>
-      </div>
-      <div class="review-card">
-        <div class="review-stars">★★★★★</div>
-        <p class="review-text">„Využili jsme QR kód v pilotní fázi zavádění AI-lektora. Já vygeneroval QR kód, žáci naskenovali a dotazovali se jako o život. Výsledky písemky a zkoušení překvapily i mě."</p>
-        <div class="review-author">
-          <div class="review-avatar" style="background: linear-gradient(135deg, #d97706, #b45309);">P</div>
-          <div>
-            <div class="review-name">Pavel H.</div>
-            <div class="review-role">Učitel fyziky, SŠ Praha</div>
-            <span class="review-badge" style="background:#fffbeb;color:#b45309;">⚡ Fyzika</span>
           </div>
         </div>
       </div>
@@ -539,18 +527,6 @@
             <div class="review-name">Radek K.</div>
             <div class="review-role">Tatínek, syn v 9. třídě</div>
             <span class="review-badge" style="background:#faf5ff;color:#7c3aed;">🧪 Chemie</span>
-          </div>
-        </div>
-      </div>
-      <div class="review-card">
-        <div class="review-stars">★★★★★</div>
-        <p class="review-text">„Byla jsem skeptická k novým technologiím ve výuce. Ale tohle funguje. Žáci se ptají víc, stydí se méně. A je to bezpečné — AI neodejde od tématu."</p>
-        <div class="review-author">
-          <div class="review-avatar" style="background: linear-gradient(135deg, #0e7490, #0891b2);">J</div>
-          <div>
-            <div class="review-name">Jana Š.</div>
-            <div class="review-role">Učitelka, ZŠ Brno</div>
-            <span class="review-badge" style="background:#ecfeff;color:#0e7490;">🏫 Školní licence</span>
           </div>
         </div>
       </div>
@@ -638,4 +614,7 @@
 </footer>
 <script>
   var btn=document.getElementById('navHamburger'),menu=document.getElementById('navLinks');
-  if(btn&&menu){btn.addEventListener('click',function(){btn.classList.toggle('open');menu.classList.toggle('open');});menu.querySelectorAll('a').forEach(function(l){l.addEventListener('click',function(){btn.cl
+  if(btn&&menu){btn.addEventListener('click',function(){btn.classList.toggle('open');menu.classList.toggle('open');});menu.querySelectorAll('a').forEach(function(l){l.addEventListener('click',function(){btn.classList.remove('open');menu.classList.remove('open');});});}
+</script>
+</body>
+</html>
