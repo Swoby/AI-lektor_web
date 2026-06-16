@@ -71,7 +71,7 @@ exports.handler = async (event) => {
           </tr>
           <tr style="border-bottom:1px solid #ddd;">
             <td style="padding:9px 0;color:#5a6a7d;font-weight:600;">Částka</td>
-            <td style="padding:9px 0;font-weight:800;color:#1e3a6e;text-align:right;">499 Kč</td>
+            <td style="padding:9px 0;font-weight:800;color:#1e3a6e;text-align:right;">299 Kč</td>
           </tr>
           <tr style="border-bottom:1px solid #ddd;">
             <td style="padding:9px 0;color:#5a6a7d;font-weight:600;">Variabilní symbol</td>
@@ -101,7 +101,7 @@ exports.handler = async (event) => {
   Učitel: <b>${ucitel}</b><br>
   Email: <b>${email}</b><br>
   VS: <b>${vs}</b><br>
-  Cena: <b>499 Kč</b><br><br>
+  Cena: <b>299 Kč</b><br><br>
   <div style="background:#fff3cd;border-radius:8px;padding:12px;margin-top:8px;">
     ⏰ <b>Do 24h po přijetí platby vygeneruj QR kód a pošli na ${email}</b><br>
     <small>Použij: py -3.12 test/vytvor_skolu.py</small>
