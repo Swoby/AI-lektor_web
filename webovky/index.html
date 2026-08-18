@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="seznam-wmt" content="nyEVnACf1WhkdSnYZGA97HvcDd993D4x" />
+  <title>AI Lektor exaktních věd — Česky. Podle osnov. Kdykoliv.</title>
+  <meta name="description" content="AI učitel matematiky, fyziky, biologie a chemie. Přizpůsobený českým osnovám, dostupný kdykoliv. Pro školy i rodiny." />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --brand: #1e3a6e; --brand2: #2a5298; --accent: #c8912a;
+      --bg: #f5f2ec; --border: rgba(30,58,110,0.13);
+      --text: #1a2535; --muted: #5a6a7d; --subtle: #374151; --white: #ffffff;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; }
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(245,242,236,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 24px; }
+    .nav-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px; gap: 16px; }
+    .nav-logo { font-size: 1rem; font-weight: 900; letter-spacing: -0.02em; color: var(--text); text-decoration: none; white-space: nowrap; display: flex; align-items: center; gap: 8px; }
+    .nav-logo-icon { font-size: 1.4rem; }
+    .nav-logo-sub { font-size: 0.7rem; font-weight: 600; color: var(--muted); letter-spacing: 0.04em; display: block; line-height: 1; }
+    .nav-links { display: flex; gap: 4px; list-style: none; }
+    .nav-links a { color: var(--subtle); text-decoration: none; font-size: 0.88rem; font-weight: 600; padding: 6px 12px; border-radius: 8px; transition: color 0.2s, background 0.2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--brand); background: rgba(30,58,110,0.08); }
+    .nav-cta { background: linear-gradient(135deg, var(--brand), var(--brand2)) !important; color: #fff !important; border-radius: 10px !important; padding: 7px 16px !important; }
+    .nav-divider { width: 1px; height: 18px; background: var(--border); margin: 0 4px; align-self: center; flex-shrink: 0; }
+    .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 6px; }
+    .nav-hamburger span { display: block; width: 24px; height: 2px; background: var(--text); border-radius: 2px; transition: all 0.3s; }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    @media (max-width: 768px) {
+      nav { position: fixed; top: 0; left: 0; right: 0; }
+      body { padding-top: 64px; }
+      .nav-hamburger { display: flex; }
+      .nav-links { display: none; flex-direction: column; gap: 4px; position: fixed; top: 64px; left: 0; right: 0; background: rgba(245,242,236,0.98); border-bottom: 1px solid var(--border); padding: 12px 16px 18px; z-index: 99; }
+      .nav-links.open { display: flex; }
+      .nav-links li.nav-divider { display: none; }
+      .nav-links a { font-size: 1rem; padding: 10px 14px; }
+    }
+    .hero { max-width: 1100px; margin: 0 auto; padding: 80px 24px 64px; display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+    @media (max-width: 768px) { .hero { grid-template-columns: 1fr; padding: 48px 24px 40px; gap: 40px; } }
+    .hero-label { display: inline-flex; align-items: center; gap: 8px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--brand); background: rgba(30,58,110,0.08); padding: 5px 12px; border-radius: 20px; margin-bottom: 16px; }
+    .hero-title { font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 900; letter-spacing: -0.04em; line-height: 1.1; color: var(--text); margin-bottom: 20px; }
+    .hero-title span { color: var(--accent); }
+    .hero-sub { font-size: 1.1rem; color: var(--subtle); margin-bottom: 36px; max-width: 480px; }
+    .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn-primary { display: inline-block; background: linear-gradient(135deg, var(--brand), var(--brand2)); color: #fff; text-decoration: none; font-weight: 800; font-size: 0.97rem; padding: 14px 28px; border-radius: 14px; box-shadow: 0 8px 32px rgba(30,58,110,0.28); transition: transform 0.2s, box-shadow 0.2s; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(30,58,110,0.38); }
+    .btn-secondary { display: inline-block; background: var(--white); color: var(--brand); text-decoration: none; font-weight: 700; font-size: 0.97rem; padding: 14px 28px; border-radius: 14px; border: 2px solid rgba(30,58,110,0.2); transition: border-color 0.2s, background 0.2s; }
+    .btn-secondary:hover { border-color: var(--brand); background: rgba(30,58,110,0.04); }
+    .hero-stats { display: flex; gap: 28px; margin-top: 40px; flex-wrap: wrap; }
+    .hero-stat-num { font-size: 1.6rem; font-weight: 900; color: var(--brand); letter-spacing: -0.04em; }
+    .hero-stat-label { font-size: 0.8rem; color: var(--muted); font-weight: 600; }
+    .hero-visual { background: var(--white); border-radius: 24px; border: 1px solid var(--border); padding: 28px; box-shadow: 0 16px 60px rgba(30,58,110,0.1); }
+    .chat-demo { display: flex; flex-direction: column; gap: 12px; }
+    .chat-msg { display: flex; gap: 10px; align-items: flex-start; }
+    .chat-msg.user { flex-direction: row-reverse; }
+    .chat-avatar { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; flex-shrink: 0; font-weight: 800; }
+    .chat-avatar.ai { background: linear-gradient(135deg, var(--brand), var(--brand2)); color: #fff; }
+    .chat-avatar.student { background: #f0f4ff; color: var(--brand); }
+    .chat-bubble { max-width: 82%; padding: 10px 14px; border-radius: 16px; font-size: 0.88rem; line-height: 1.5; }
+    .chat-bubble.ai { background: #f0f4ff; color: var(--text); border-bottom-left-radius: 4px; }
+    .chat-bubble.user { background: linear-gradient(135deg, var(--brand), var(--brand2)); color: #fff; border-bottom-right-radius: 4px; }
+    .chat-subject-badge { text-align: center; font-size: 0.75rem; color: var(--muted); margin-bottom: 8px; }
+    .section { max-width: 1100px; margin: 0 auto; padding: 64px 24px; }
+    .section-label { display: inline-flex; align-items: center; gap: 10px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--brand); margin-bottom: 10px; }
+    .section-label::before { content: ''; display: block; width: 28px; height: 2px; background: linear-gradient(90deg, var(--brand), var(--brand2)); border-radius: 2px; }
+    .section-title { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 900; letter-spacing: -0.04em; color: var(--text); margin-bottom: 12px; }
+    .section-title span { color: var(--accent); }
+    .section-sub { color: var(--subtle); font-size: 1.05rem; margin-bottom: 48px; max-width: 580px; }
+    .divider { border: none; border-top: 1px solid var(--border); }
+    .bg-light { background: var(--white); }
+    .predmety-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    @media (max-width: 900px) { .predmety-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 500px) { .predmety-grid { grid-template-columns: 1fr; } }
+    .predmet-card { background: var(--white); border: 1px solid var(--border); border-radius: 20px; padding: 28px 24px; transition: box-shadow 0.2s, transform 0.2s; }
+    .predmet-card:hover { box-shadow: 0 8px 40px rgba(30,58,110,0.12); transform: translateY(-3px); }
+    .predmet-icon { font-size: 2.4rem; margin-bottom: 14px; }
+    .predmet-name { font-size: 1.15rem; font-weight: 900; color: var(--text); margin-bottom: 6px; }
+    .predmet-range { font-size: 0.82rem; font-weight: 700; color: var(--brand); background: rgba(30,58,110,0.08); padding: 3px 10px; border-radius: 20px; display: inline-block; margin-bottom: 12px; }
+    .predmet-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
+    .predmet-urovne { margin-top: 16px; display: flex; flex-direction: column; gap: 5px; }
+    .predmet-uroven { font-size: 0.82rem; color: var(--subtle); display: flex; align-items: center; gap: 7px; }
+    .predmet-uroven::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+    .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+    @media (max-width: 768px) { .steps-grid { grid-template-columns: 1fr; } }
+    .step-card { text-align: center; padding: 32px 24px; }
+    .step-num { width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, var(--brand), var(--brand2)); color: #fff; font-size: 1.3rem; font-weight: 900; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; }
+    .step-title { font-size: 1.1rem; font-weight: 800; color: var(--text); margin-bottom: 10px; }
+    .step-desc { font-size: 0.92rem; color: var(--muted); line-height: 1.7; }
+    .vyhody-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    @media (max-width: 900px) { .vyhody-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 500px) { .vyhody-grid { grid-template-columns: 1fr; } }
+    .vyhoda-card { background: var(--white); border: 1px solid var(--border); border-radius: 18px; padding: 24px; }
+    .vyhoda-icon { font-size: 1.8rem; margin-bottom: 12px; }
+    .vyhoda-title { font-size: 1rem; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+    .vyhoda-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.6; }
+    .reviews-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    @media (max-width: 900px) { .reviews-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px) { .reviews-grid { grid-template-columns: 1fr; } }
+    .review-card { background: var(--white); border: 1px solid var(--border); border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 14px; }
+    .review-stars { color: #f59e0b; font-size: 0.9rem; letter-spacing: 2px; }
+    .review-text { font-size: 0.92rem; color: var(--subtle); line-height: 1.7; font-style: italic; flex: 1; }
+    .review-author { display: flex; align-items: center; gap: 12px; }
+    .review-avatar { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 800; color: #fff; flex-shrink: 0; }
+    .review-name { font-size: 0.9rem; font-weight: 800; color: var(--text); }
+    .review-role { font-size: 0.78rem; color: var(--muted); }
+    .review-badge { font-size: 0.72rem; font-weight: 700; padding: 2px 8px; border-radius: 10px; display: inline-block; margin-top: 3px; }
+    .cta-section { background: linear-gradient(135deg, var(--brand) 0%, var(--brand2) 100%); }
+    .cta-inner { max-width: 1100px; margin: 0 auto; padding: 80px 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+    @media (max-width: 768px) { .cta-inner { grid-template-columns: 1fr; padding: 56px 24px; } }
+    .cta-title { font-size: clamp(1.8rem, 4vw, 2.4rem); font-weight: 900; letter-spacing: -0.04em; color: #fff; margin-bottom: 16px; }
+    .cta-sub { font-size: 1rem; color: rgba(255,255,255,0.8); line-height: 1.7; }
+    .cta-cards { display: flex; flex-direction: column; gap: 16px; }
+    .cta-card { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); border-radius: 18px; padding: 22px 24px; }
+    .cta-card-title { font-size: 1rem; font-weight: 800; color: #fff; margin-bottom: 6px; }
+    .cta-card-desc { font-size: 0.88rem; color: rgba(255,255,255,0.75); margin-bottom: 14px; }
+    .btn-white { display: inline-block; background: #fff; color: var(--brand); text-decoration: none; font-weight: 800; font-size: 0.9rem; padding: 10px 22px; border-radius: 10px; transition: transform 0.2s; }
+    .btn-white:hover { transform: translateY(-1px); }
+    .btn-white-outline { display: inline-block; background: transparent; color: #fff; text-decoration: none; font-weight: 700; font-size: 0.9rem; padding: 10px 22px; border-radius: 10px; border: 2px solid rgba(255,255,255,0.5); transition: border-color 0.2s; }
+    .btn-white-outline:hover { border-color: #fff; }
+    footer { border-top: 1px solid var(--border); padding: 40px 24px; background: var(--bg); }
+    .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+    .footer-logo { font-size: 1rem; font-weight: 900; color: var(--text); }
+    .footer-logo span { color: var(--accent); }
+    .footer-nav { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; list-style: none; }
+    .footer-nav a { color: var(--muted); text-decoration: none; font-size: 0.88rem; padding: 4px 10px; border-radius: 6px; transition: color 0.2s; }
+    .footer-nav a:hover { color: var(--brand); }
+    .footer-copy { font-size: 0.8rem; color: var(--muted); text-align: center; }
+
+    /* ── DISCLAIMER ── */
+    .disclaimer-wrap { max-width: 1100px; margin: 0 auto; padding: 0 24px 56px; display: flex; justify-content: center; }
+    .disclaimer-box { background: linear-gradient(135deg, rgba(30,58,110,0.05), rgba(42,82,152,0.03)); border: 1px solid rgba(30,58,110,0.15); border-radius: 20px; padding: 32px 36px; max-width: 860px; width: 100%; }
+    .disclaimer-box h3 { font-size: 1.05rem; font-weight: 800; color: var(--text); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .disclaimer-box > p { font-size: 0.88rem; color: var(--muted); margin-bottom: 24px; }
+    .disclaimer-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px 32px; }
+    .disclaimer-item { display: flex; gap: 12px; align-items: flex-start; }
+    .disclaimer-item .d-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 2px; }
+    .disclaimer-item p { font-size: 0.87rem; color: var(--muted); line-height: 1.55; }
+    .disclaimer-item strong { color: var(--text); display: block; font-size: 0.9rem; font-weight: 700; margin-bottom: 3px; }
+    @media (max-width: 768px) { .disclaimer-box { padding: 24px 20px; } .disclaimer-wrap { padding-bottom: 40px; } .disclaimer-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-icon">🧠</span>
+      <div>AI Lektor<span class="nav-logo-sub">exaktních věd</span></div>
+    </a>
+    <button class="nav-hamburger" id="navHamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html" class="active">Domů</a></li>
+      <li class="nav-divider"></li>
+      <li><a href="skoly.html">Pro školy</a></li>
+      <li><a href="rodiny.html">Pro rodiny</a></li>
+      <li><a href="cenik.html">Ceník</a></li>
+      <li class="nav-divider"></li>
+      <li><a href="kontakt.html" class="nav-cta">Kontakt</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="hero">
+  <!-- LEFT: Headline -->
+  <div>
+    <div class="hero-label">Česky. Podle osnov. Bez kompromisů.</div>
+    <h1 class="hero-title">Každý žák.<br>Vlastní tempo.<br><span>Okamžitá pomoc.</span></h1>
+    <p class="hero-sub">AI učitel matematiky, fyziky, biologie a chemie. Přizpůsobený českým osnovám, dostupný 24 hodin denně — pro školy i rodiny.</p>
+    <div class="hero-btns">
+      <a href="skoly.html" class="btn-primary">🏫 Pro školy</a>
+      <a href="rodiny.html" class="btn-secondary">👨‍👩‍👧 Pro rodiny</a>
+    </div>
+  </div>
+
+  <!-- RIGHT: Subject-switching animated chat -->
+  <div class="hero-visual" id="hero-chat-box" style="padding:24px 28px; min-height:340px; position:relative;">
+    <div id="scene-badge" style="text-align:center; margin-bottom:14px;">
+      <span id="badge-text" style="background:rgba(30,58,110,0.07); border-radius:20px; padding:4px 14px; font-size:0.78rem; font-weight:700; color:#555; transition: opacity 0.4s;"></span>
+    </div>
+    <div id="chat-messages" style="display:flex; flex-direction:column; gap:10px;"></div>
+    <div id="typing-row" style="display:none; align-items:center; gap:10px; margin-top:4px;">
+      <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#1e3a6e,#2a5298);color:#fff;display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-weight:800;flex-shrink:0;" id="ai-avatar">AI</div>
+      <div style="background:#f0f4ff;border-radius:16px;border-bottom-left-radius:4px;padding:10px 16px;">
+        <div class="typing-dots"><span></span><span></span><span></span></div>
+      </div>
+    </div>
+    <!-- Scene dots -->
+    <div style="display:flex; justify-content:center; gap:7px; margin-top:18px;" id="scene-dots"></div>
+  </div>
+</div>
+
+<style>
+  .typing-dots { display:flex; gap:5px; align-items:center; height:14px; }
+  .typing-dots span { width:6px; height:6px; border-radius:50%; background:#2a5298; animation: tdot 1.3s infinite ease-in-out; }
+  .typing-dots span:nth-child(2) { animation-delay:0.18s; }
+  .typing-dots span:nth-child(3) { animation-delay:0.36s; }
+  @keyframes tdot { 0%,60%,100%{opacity:0.2;transform:translateY(0)} 30%{opacity:1;transform:translateY(-3px)} }
+  @keyframes msgIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+  .scene-dot { width:8px;height:8px;border-radius:50%;background:#ddd;transition:background 0.3s; cursor:default; }
+  .scene-dot.active { background:#1e3a6e; }
+</style>
+
+<script>
+(function(){
+  var scenes = [
+    {
+      badge: "🧮 Matematika · 3. třída",
+      aiIcon: "🌟",
+      initial: "M",
+      messages: [
+        { from:"user", init:"M", text:"Kolik je 7 × 8? Pořád to pletu." },
+        { from:"ai",   text:"Zkus tohle: 7 × 8 si rozděl na 7 × 4 + 7 × 4. Kolik je 7 × 4?" },
+        { from:"user", init:"M", text:"28!" },
+        { from:"ai",   text:"Super! Takže 28 + 28 = ? 🌟" },
+        { from:"user", init:"M", text:"56! Jééé, to funguje!" },
+      ]
+    },
+    {
+      badge: "⚡ Fyzika · 8. třída",
+      aiIcon: "⚡",
+      initial: "J",
+      messages: [
+        { from:"user", init:"J", text:"Co je to odpor? Nechápu to z knihy vůbec." },
+        { from:"ai",   text:"Představ si vodu v hadici. Odpor je jak moc úzká ta hadice je — čím užší, tím hůř teče proud. Dává to smysl?" },
+        { from:"user", init:"J", text:"Jo! A napětí je jako tlak vody?" },
+        { from:"ai",   text:"Přesně tak! 🎯 Teď znáš základ Ohmova zákona: U = R × I." },
+      ]
+    },
+    {
+      badge: "🌿 Biologie · 6. třída",
+      aiIcon: "🌿",
+      initial: "L",
+      messages: [
+        { from:"user", init:"L", text:"Nechápu fotosyntézu. Co vlastně rostlina dělá?" },
+        { from:"ai",   text:"Představ si rostlinu jako kuchyni — bere vodu ze země, vzduch z okolí a energii ze slunce. Z toho uvaří cukr pro sebe. Zbyde jí kyslík — ten pustí ven. 🌱" },
+        { from:"user", init:"L", text:"Takže rostliny nám dávají kyslík?" },
+        { from:"ai",   text:"Přesně! Každý strom co vidíš je malá továrna na kyslík. Teď mi řekni — co rostlina potřebuje ke fotosyntéze?" },
+      ]
+    },
+    {
+      badge: "🧪 Chemie · 9. třída",
+      aiIcon: "⚗️",
+      initial: "T",
+      messages: [
+        { from:"user", init:"T", text:"Proč reaguje kyselina se zásadou?" },
+        { from:"ai",   text:"Kyselina dává H⁺, zásada ho bere. Jsou to přesné protiklady — proto se neutralizují a vznikne voda a sůl." },
+        { from:"user", init:"T", text:"A co vznikne z HCl a NaOH?" },
+        { from:"ai",   text:"NaCl — kuchyňská sůl — a voda! To co máš doma na stole. 🧂" },
+      ]
+    }
+  ];
+
+  var TYPING_MS = 1100;
+  var USER_MS   = 800;
+  var READ_MS   = 1300;
+  var SCENE_PAUSE = 2800;
+
+  var container  = document.getElementById("chat-messages");
+  var typingRow  = document.getElementById("typing-row");
+  var badgeEl    = document.getElementById("badge-text");
+  var dotsEl     = document.getElementById("scene-dots");
+  var aiAvatar   = document.getElementById("ai-avatar");
+
+  var sceneIdx = 0;
+  var msgIdx   = 0;
+  var timer    = null;
+
+  // Build dots
+  scenes.forEach(function(_, i) {
+    var d = document.createElement("div");
+    d.className = "scene-dot" + (i===0 ? " active" : "");
+    d.id = "dot-" + i;
+    dotsEl.appendChild(d);
+  });
+
+  function setDot(i) {
+    scenes.forEach(function(_, j) {
+      document.getElementById("dot-"+j).className = "scene-dot" + (j===i?" active":"");
+    });
+  }
+
+  function fadeOutIn(el, newText) {
+    el.style.opacity = "0";
+    setTimeout(function(){ el.textContent = newText; el.style.opacity = "1"; }, 350);
+  }
+
+  function appendMsg(msg, scene) {
+    var isUser = msg.from === "user";
+    var row = document.createElement("div");
+    row.style.cssText = "display:flex;gap:10px;align-items:flex-start;animation:msgIn 0.3s ease forwards;" + (isUser?"flex-direction:row-reverse;":"");
+
+    var av = document.createElement("div");
+    av.style.cssText = "width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:800;flex-shrink:0;";
+    if (isUser) {
+      av.style.cssText += "background:#f0f4ff;color:#1e3a6e;";
+      av.textContent = msg.init || "?";
+    } else {
+      av.style.cssText += "background:linear-gradient(135deg,#1e3a6e,#2a5298);color:#fff;";
+      av.textContent = "AI";
+    }
+
+    var bub = document.createElement("div");
+    bub.style.cssText = "max-width:82%;padding:9px 13px;border-radius:15px;font-size:0.86rem;line-height:1.55;";
+    if (isUser) {
+      bub.style.cssText += "background:linear-gradient(135deg,#1e3a6e,#2a5298);color:#fff;border-bottom-right-radius:3px;";
+    } else {
+      bub.style.cssText += "background:#f0f4ff;color:#1a1a2e;border-bottom-left-radius:3px;";
+    }
+    bub.innerHTML = msg.text;
+
+    row.appendChild(av);
+    row.appendChild(bub);
+    container.appendChild(row);
+  }
+
+  function startScene(idx) {
+    var scene = scenes[idx];
+    container.innerHTML = "";
+    typingRow.style.display = "none";
+    msgIdx = 0;
+    fadeOutIn(badgeEl, scene.badge);
+    setDot(idx);
+    clearTimeout(timer);
+    runMsg(scene);
+  }
+
+  function runMsg(scene) {
+    if (msgIdx >= scene.messages.length) {
+      // Scene done — wait then next
+      timer = setTimeout(function(){
+        sceneIdx = (sceneIdx + 1) % scenes.length;
+        // fade out container
+        container.style.opacity = "0";
+        setTimeout(function(){
+          container.style.opacity = "1";
+          startScene(sceneIdx);
+        }, 400);
+      }, SCENE_PAUSE);
+      return;
+    }
+
+    var msg = scene.messages[msgIdx];
+    msgIdx++;
+
+    if (msg.from === "ai") {
+      typingRow.style.display = "flex";
+      timer = setTimeout(function(){
+        typingRow.style.display = "none";
+        appendMsg(msg, scene);
+        timer = setTimeout(function(){ runMsg(scene); }, READ_MS);
+      }, TYPING_MS);
+    } else {
+      appendMsg(msg, scene);
+      timer = setTimeout(function(){ runMsg(scene); }, USER_MS);
+    }
+  }
+
+  // Add fade transition to container
+  container.style.transition = "opacity 0.35s ease";
+
+  window.addEventListener("load", function(){
+    setTimeout(function(){ startScene(0); }, 500);
+  });
+})();
+</script>
+
+<hr class="divider" />
+
+<div class="section">
+  <div class="section-label">Co učíme</div>
+  <h2 class="section-title">Čtyři předměty.<br><span>Každý věk.</span></h2>
+  <p class="section-sub">Od první třídy po maturitu. Každá úroveň má vlastní tón, vlastní příklady a vlastní pedagogický přístup podle českých osnov.</p>
+  <div class="predmety-grid">
+    <div class="predmet-card">
+      <div class="predmet-icon">🧮</div>
+      <div class="predmet-name">Matematika</div>
+      <div class="predmet-range">1. třída – maturita</div>
+      <p class="predmet-desc">Od násobilky přes zlomky, rovnice a geometrii až po diferenciální počet a matice.</p>
+      <div class="predmet-urovne">
+        <div class="predmet-uroven">Matýsek — 1. stupeň ZŠ</div>
+        <div class="predmet-uroven">Maty — 2. stupeň ZŠ</div>
+        <div class="predmet-uroven">Sigma — Střední škola</div>
+      </div>
+    </div>
+    <div class="predmet-card">
+      <div class="predmet-icon">⚡</div>
+      <div class="predmet-name">Fyzika</div>
+      <div class="predmet-range">ZŠ 2. stupeň – maturita</div>
+      <p class="predmet-desc">Mechanika, elektřina, optika, termodynamika. Vzorce i intuice — s výpočty i bez.</p>
+      <div class="predmet-urovne">
+        <div class="predmet-uroven">ZŠ 2. stupeň (6.–9. třída)</div>
+        <div class="predmet-uroven">Střední škola (1.–4. ročník)</div>
+      </div>
+    </div>
+    <div class="predmet-card">
+      <div class="predmet-icon">🌿</div>
+      <div class="predmet-name">Biologie</div>
+      <div class="predmet-range">3. třída – maturita</div>
+      <p class="predmet-desc">Příroda, ekosystémy, biologie člověka, genetika, evoluce. Hravě pro malé, vědecky pro velké.</p>
+      <div class="predmet-urovne">
+        <div class="predmet-uroven">Přírodověda — 3.–5. třída</div>
+        <div class="predmet-uroven">Přírodopis — 6.–9. třída</div>
+        <div class="predmet-uroven">Biologie — Střední škola</div>
+      </div>
+    </div>
+    <div class="predmet-card">
+      <div class="predmet-icon">🧪</div>
+      <div class="predmet-name">Chemie</div>
+      <div class="predmet-range">8. třída – maturita</div>
+      <p class="predmet-desc">Prvky, sloučeniny, reakce, organická chemie — s bezpečnostními pravidly pevně zabudovanými.</p>
+      <div class="predmet-urovne">
+        <div class="predmet-uroven">ZŠ 2. stupeň (8.–9. třída)</div>
+        <div class="predmet-uroven">SŠ 1.–2. ročník</div>
+        <div class="predmet-uroven">SŠ 3.–4. ročník</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider" />
+
+<div class="bg-light">
+  <div class="section">
+    <div class="section-label">Jak to funguje</div>
+    <h2 class="section-title">Jednoduché.<br><span>Okamžitě.</span></h2>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-title">Zvolíte předmět a třídu</div>
+        <p class="step-desc">Vyberte předmět a ročník — AI lektor se přizpůsobí přesně tomu, co se vaše dítě právě učí. Žádná instalace, žádné nastavování.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-title">Dítě se zeptá</div>
+        <p class="step-desc">Napíše otázku vlastními slovy. AI odpovídá česky, s příklady, krok za krokem. Nikdy neztratí trpělivost ani po desáté otázce.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div class="step-title">Pochopí — ne jen opíše</div>
+        <p class="step-desc">AI vede, nevyřeší za žáka. Ukáže postup, nechá dítě zkusit, zkontroluje. Žák odchází s pochopením, ne s hotovým úkolem.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider" />
+
+<div class="section">
+  <div class="section-label">Proč AI Lektor</div>
+  <h2 class="section-title">Česky. Podle osnov.<br><span>Bez kompromisů.</span></h2>
+  <p class="section-sub">Čtyři předměty. Dvanáct věkových úrovní. Odpovědi přizpůsobené třídě, tónu i tempu konkrétního dítěte — ne průměrnému žákovi.</p>
+  <div class="vyhody-grid">
+    <div class="vyhoda-card">
+      <div class="vyhoda-icon">🇨🇿</div>
+      <div class="vyhoda-title">Česky a podle RVP</div>
+      <p class="vyhoda-desc">Zná české Rámcové vzdělávací programy. Ví co se probírá v 7. třídě a co teprve v 9. Žák nedostane látku z příštího roku.</p>
+    </div>
+    <div class="vyhoda-card">
+      <div class="vyhoda-icon">⏰</div>
+      <div class="vyhoda-title">Dostupný ve 22:00</div>
+      <p class="vyhoda-desc">Když je domácí úkol na zítra a lektor nedvíhá telefon. Každý den, o víkendu, před každou písemkou — bez čekání na termín.</p>
+    </div>
+    <div class="vyhoda-card">
+      <div class="vyhoda-icon">🔒</div>
+      <div class="vyhoda-title">Bezpečný pro děti</div>
+      <p class="vyhoda-desc">Odpovídá pouze na školní látku. Jailbreak ochrana testovaná pro každý předmět a věkovou skupinu. Data v EU — GDPR splněno.</p>
+    </div>
+    <div class="vyhoda-card">
+      <div class="vyhoda-icon">🎯</div>
+      <div class="vyhoda-title">Přizpůsobí se věku</div>
+      <p class="vyhoda-desc">Matýsek mluví hravě pro 1. stupeň. Sigma jako kolega u tabule pro maturanty. Jiný tón, jiné příklady, jiná hloubka.</p>
+    </div>
+    <div class="vyhoda-card">
+      <div class="vyhoda-icon">🏫</div>
+      <div class="vyhoda-title">Kontrola v rukou školy</div>
+      <p class="vyhoda-desc">Učitel aktivuje přístup QR kódem — na hodinu nebo na celý měsíc. Škola vidí přehled aktivity, učitelé se mohou soustředit na hloubku.</p>
+    </div>
+    <div class="vyhoda-card">
+      <div class="vyhoda-icon">💰</div>
+      <div class="vyhoda-title">Zlomek ceny lektora</div>
+      <p class="vyhoda-desc">Soukromý lektor stojí 350–600 Kč za hodinu. Rodinné předplatné: 99 Kč za celý měsíc. Pro školy od 30 Kč na žáka měsíčně.</p>
+    </div>
+  </div>
+</div>
+
+<hr class="divider" />
+
+<div class="bg-light">
+  <div class="section">
+    <div class="section-label">Reference</div>
+    <h2 class="section-title">Co říkají rodiče,<br><span>učitelé a studenti.</span></h2>
+    <p class="section-sub">Zkušenosti z pilotního provozu — různé předměty, různé věkové skupiny.</p>
+    <div class="reviews-grid">
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">„Syn se vždy styděl ptát ve třídě. Teď se zeptá klidně 10x. AI Lektor je neunavný. Konečně mu zlomky dávají smysl."</p>
+        <div class="review-author">
+          <div class="review-avatar" style="background: linear-gradient(135deg, #1e3a6e, #2a5298);">L</div>
+          <div>
+            <div class="review-name">Lucie M.</div>
+            <div class="review-role">Maminka, syn v 6. třídě</div>
+            <span class="review-badge" style="background:#eff6ff;color:#1e3a6e;">🧮 Matematika</span>
+          </div>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">„Využili jsme QR kód v pilotní fázi zavádění AI-lektora. Já vygeneroval QR kód, žáci naskenovali a dotazovali se jako o život. Výsledky písemky a zkoušení překvapily i mě."</p>
+        <div class="review-author">
+          <div class="review-avatar" style="background: linear-gradient(135deg, #d97706, #b45309);">P</div>
+          <div>
+            <div class="review-name">Pavel H.</div>
+            <div class="review-role">Učitel fyziky, SŠ Praha</div>
+            <span class="review-badge" style="background:#fffbeb;color:#b45309;">⚡ Fyzika</span>
+          </div>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">„Dcera se připravovala na maturitu z biologie sama, bez lektora. Prošla s jedničkou. Říká, že AI jí vysvětlil genetiku lépe než kdokoliv předtím."</p>
+        <div class="review-author">
+          <div class="review-avatar" style="background: linear-gradient(135deg, #16a34a, #15803d);">M</div>
+          <div>
+            <div class="review-name">Markéta V.</div>
+            <div class="review-role">Maminka, dcera maturantka</div>
+            <span class="review-badge" style="background:#f0fdf4;color:#16a34a;">🌿 Biologie</span>
+          </div>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">„Chemii syn nenáviděl. Teď se ptá každý večer — dobrovolně. Líbí se mu, že AI mu nikdy neřekne, že je to přece jednoduché."</p>
+        <div class="review-author">
+          <div class="review-avatar" style="background: linear-gradient(135deg, #7c3aed, #6d28d9);">R</div>
+          <div>
+            <div class="review-name">Radek K.</div>
+            <div class="review-role">Tatínek, syn v 9. třídě</div>
+            <span class="review-badge" style="background:#faf5ff;color:#7c3aed;">🧪 Chemie</span>
+          </div>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">„Byla jsem skeptická k novým technologiím ve výuce. Ale tohle funguje. Žáci se ptají víc, stydí se méně. A je to bezpečné — AI neodejde od tématu."</p>
+        <div class="review-author">
+          <div class="review-avatar" style="background: linear-gradient(135deg, #0e7490, #0891b2);">J</div>
+          <div>
+            <div class="review-name">Jana Š.</div>
+            <div class="review-role">Učitelka, ZŠ Brno</div>
+            <span class="review-badge" style="background:#ecfeff;color:#0e7490;">🏫 Školní licence</span>
+          </div>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">„Učím se sám na přijímačky na medicínu — biologie i chemie naráz. Za cenu jednoho doučování mám přístup celý měsíc. To prostě nedává smysl, jak moc je to výhodné."</p>
+        <div class="review-author">
+          <div class="review-avatar" style="background: linear-gradient(135deg, #dc2626, #b91c1c);">O</div>
+          <div>
+            <div class="review-name">Ondřej B.</div>
+            <div class="review-role">Student, 4. ročník gymnázium</div>
+            <span class="review-badge" style="background:#fef2f2;color:#dc2626;">🎓 Přijímačky</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider" />
+
+<div class="cta-section">
+  <div class="cta-inner">
+    <div>
+      <h2 class="cta-title">Začněte ještě dnes.</h2>
+      <p class="cta-sub">Ředitelé škol: bezplatná ukázka aplikace pro vedení, první QR session od 299 Kč.<br>Rodiny: 20 otázek zdarma, bez registrace, bez karty.</p>
+    </div>
+    <div class="cta-cards">
+      <div class="cta-card">
+        <div class="cta-card-title">🏫 Pro školy</div>
+        <div class="cta-card-desc">Bezplatná ukázka pro vedení. QR session od 299 Kč. Měsíční licence od 799 Kč/třída.</div>
+        <a href="skoly.html" class="btn-white">Zjistit více o školních licencích →</a>
+      </div>
+      <div class="cta-card">
+        <div class="cta-card-title">👨‍👩‍👧 Pro rodiny</div>
+        <div class="cta-card-desc">20 otázek zdarma bez registrace. Předplatné od 99 Kč měsíčně.</div>
+        <a href="rodiny.html" class="btn-white-outline">Zkusit zdarma →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── DISCLAIMER ── -->
+<div class="disclaimer-wrap">
+  <div class="disclaimer-box">
+    <h3>🔒 Bezpečnost a soukromí — co je důležité vědět</h3>
+    <p>AI Lektor je nástroj poháněný umělou inteligencí. Přečtěte si níže, jak přistupujeme k bezpečnosti a soukromí vašeho dítěte.</p>
+    <div class="disclaimer-grid">
+      <div class="disclaimer-item">
+        <span class="d-icon">🤖</span>
+        <p><strong>AI není dokonalá</strong>AI Lektor může občas chybovat. Slouží jako podpora, ne jako náhrada za učitele nebo lektora. Důležité výsledky vždy ověřte.</p>
+      </div>
+      <div class="disclaimer-item">
+        <span class="d-icon">🚫</span>
+        <p><strong>Jen školní předměty</strong>AI Lektor odpovídá výhradně na dotazy z matematiky, fyziky, biologie a chemie. Jiná témata odmítne a dítě přesměruje zpátky k učivu.</p>
+      </div>
+      <div class="disclaimer-item">
+        <span class="d-icon">🔐</span>
+        <p><strong>Žádná osobní data</strong>Neukládáme jméno dítěte, věk ani školní výsledky. Konverzace nejsou sdíleny s třetími stranami ani použity pro trénink AI.</p>
+      </div>
+      <div class="disclaimer-item">
+        <span class="d-icon">🛡️</span>
+        <p><strong>Bezpečné prostředí s vícevrstvou ochranou</strong>AI Lektor obsahuje vícevrstvé bezpečnostní ochrany testované proti pokusům o obcházení. Přesto provozovatel nenese odpovědnost za obsah vzniklý záměrným a opakovaným porušováním podmínek použití. Používání aplikace nezletilými probíhá pod dohledem a odpovědností rodiče nebo zákonného zástupce.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">🧠 AI Lektor <span>exaktních věd</span></div>
+    <div style="font-size:0.8rem; color:var(--muted); margin-top:4px;">Poháněno nejpokročilejšími AI modely od Anthropic</div>
+    <ul class="footer-nav">
+      <li><a href="index.html">Domů</a></li>
+      <li><a href="skoly.html">Pro školy</a></li>
+      <li><a href="rodiny.html">Pro rodiny</a></li>
+      <li><a href="cenik.html">Ceník</a></li>
+      <li><a href="kontakt.html">Kontakt</a></li>
+      <li><a href="podminky.html">Obchodní podmínky</a></li>
+      <li><a href="soukromi.html">Ochrana osobních údajů</a></li>
+      <li><a href="aup.html">Podmínky použití AI</a></li>
+    </ul>
+    <div class="footer-copy">&copy; 2026 AI Lektor exaktních věd &nbsp;&middot;&nbsp; ailektor.info@gmail.com &nbsp;&middot;&nbsp; Data v EU (Frankfurt) &nbsp;&middot;&nbsp; <a href="soukromi.html" style="color:inherit; text-decoration:none;">GDPR</a> &nbsp;&middot;&nbsp; <a href="https://www.comgate.eu" target="_blank" rel="noopener"><img src="assets/platebni-loga.png" alt="Platby zajišťuje Comgate, VISA, Mastercard" style="height:28px; width:auto; vertical-align:middle; mix-blend-mode:multiply;"></a></div>
+  </div>
+</footer>
+<script>
+  var btn=document.getElementById('navHamburger'),menu=document.getElementById('navLinks');
+  if(btn&&menu){btn.addEventListener('click',function(){btn.classList.toggle('open');menu.classList.toggle('open');});menu.querySelectorAll('a').forEach(function(l){l.addEventListener('click',function(){btn.classList.remove('open');menu.classList.remove('open');});});}
+</script>
+</body>
+</html>

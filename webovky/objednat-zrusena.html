@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Platba byla zrušena — AI Lektor exaktních věd</title>
+  <meta name="description" content="Platba byla zrušena. Objednávku můžete kdykoliv zopakovat." />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --brand: #1e3a6e; --brand2: #2a5298; --accent: #c8912a;
+      --bg: #f5f2ec; --border: rgba(30,58,110,0.13);
+      --text: #1a2535; --muted: #5a6a7d; --subtle: #374151; --white: #ffffff;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; min-height: 100vh; }
+
+    /* NAV */
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(245,242,236,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 24px; }
+    .nav-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px; gap: 16px; }
+    .nav-logo { font-size: 1rem; font-weight: 900; letter-spacing: -0.02em; color: var(--text); text-decoration: none; white-space: nowrap; display: flex; align-items: center; gap: 8px; }
+    .nav-logo-icon { font-size: 1.4rem; }
+    .nav-logo-sub { font-size: 0.7rem; font-weight: 600; color: var(--muted); letter-spacing: 0.04em; display: block; line-height: 1; }
+
+    /* LAYOUT */
+    .page-wrap { max-width: 640px; margin: 0 auto; padding: 72px 24px 96px; }
+    .result-card { background: var(--white); border: 1px solid var(--border); border-radius: 24px; padding: 44px 36px; text-align: center; }
+    @media (max-width: 480px) { .result-card { padding: 30px 22px; } }
+    .result-icon { font-size: 3.5rem; margin-bottom: 16px; }
+    .result-card h1 { font-size: 1.6rem; font-weight: 900; letter-spacing: -0.03em; color: var(--text); margin-bottom: 14px; }
+    .result-card p { font-size: 0.98rem; color: var(--muted); max-width: 460px; margin: 0 auto 14px; }
+    .order-ref { display: inline-block; background: rgba(30,58,110,0.06); border: 1px solid var(--border); border-radius: 10px; padding: 8px 16px; font-size: 0.88rem; color: var(--text); font-weight: 700; margin: 10px 0 20px; }
+    .info-box { background: rgba(200,145,42,0.1); border: 1px solid rgba(200,145,42,0.3); border-radius: 14px; padding: 16px 18px; font-size: 0.88rem; color: #92400e; line-height: 1.6; margin-top: 18px; text-align: left; }
+    .btn-row { display: flex; gap: 12px; justify-content: center; margin-top: 28px; flex-wrap: wrap; }
+    .btn { display: inline-block; text-decoration: none; border-radius: 14px; padding: 13px 24px; font-size: 0.95rem; font-weight: 800; transition: transform 0.2s, box-shadow 0.2s; }
+    .btn-primary { background: linear-gradient(135deg, var(--brand), var(--brand2)); color: #fff; box-shadow: 0 8px 32px rgba(30,58,110,0.28); }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(30,58,110,0.38); }
+    .btn-secondary { background: var(--white); color: var(--brand); border: 1.5px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--brand); }
+
+    /* FOOTER */
+    footer { background: var(--text); color: rgba(255,255,255,0.7); padding: 48px 24px 32px; margin-top: 40px; }
+    .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+    .footer-brand { font-size: 1rem; font-weight: 900; color: #fff; }
+    .footer-links-row { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; list-style: none; }
+    .footer-links-row a { color: rgba(255,255,255,0.55); text-decoration: none; font-size: 0.83rem; padding: 3px 8px; transition: color 0.2s; }
+    .footer-links-row a:hover { color: #fff; }
+    .footer-copy { font-size: 0.78rem; color: rgba(255,255,255,0.35); text-align: center; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-icon">🧠</span>
+      <div>AI Lektor<span class="nav-logo-sub">exaktních věd</span></div>
+    </a>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <div class="result-card">
+    <div class="result-icon">⚠️</div>
+    <h1>Platba byla zrušena</h1>
+    <p>Platba nebyla dokončena a objednávka nebyla aktivována. Nic se neděje — objednávku můžete kdykoliv zopakovat.</p>
+    <div class="order-ref" id="order-ref" style="display:none;"></div>
+    <div class="info-box">
+      💡 Pokud jste platbu zrušili omylem nebo narazili na problém, klidně to zkuste znovu. V případě potíží nás kontaktujte na <a href="mailto:ailektor.info@gmail.com" style="color:#92400e;">ailektor.info@gmail.com</a>.
+    </div>
+    <div class="btn-row">
+      <a href="objednat.html" class="btn btn-primary">Zopakovat objednávku</a>
+      <a href="index.html" class="btn btn-secondary">← Zpět na hlavní stránku</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">🧠 AI Lektor exaktních věd</div>
+    <ul class="footer-links-row">
+      <li><a href="index.html">Domů</a></li>
+      <li><a href="skoly.html">Pro školy</a></li>
+      <li><a href="rodiny.html">Pro rodiny</a></li>
+      <li><a href="cenik.html">Ceník</a></li>
+      <li><a href="kontakt.html">Kontakt</a></li>
+      <li><a href="podminky.html">Obchodní podmínky</a></li>
+      <li><a href="soukromi.html">Ochrana osobních údajů</a></li>
+    </ul>
+    <div class="footer-copy">© 2026 Miroslav Svoboda, IČO: 88282759 · Bedřicha Smetany 566, 330 11 Třemošná · <a href="tel:+420777190891" style="color:inherit;">+420 777 190 891</a> · ailektor.info@gmail.com</div>
+  </div>
+</footer>
+
+<script>
+  const vs = new URLSearchParams(window.location.search).get('vs') || new URLSearchParams(window.location.search).get('refId');
+  if (vs) {
+    const el = document.getElementById('order-ref');
+    el.textContent = 'Číslo objednávky: ' + vs;
+    el.style.display = 'inline-block';
+  }
+</script>
+
+</body>
+</html>

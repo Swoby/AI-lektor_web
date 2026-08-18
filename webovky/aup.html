@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Podmínky použití AI — AI Lektor exaktních věd</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --brand: #1e3a6e; --brand2: #2a5298; --accent: #c8912a; --bg: #f5f2ec; --border: rgba(30,58,110,0.13); --text: #1a2535; --muted: #5a6a7d; --subtle: #374151; --white: #ffffff; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; line-height: 1.7; }
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(245,242,236,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 24px; }
+    .nav-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px; gap: 16px; }
+    .nav-logo { font-size: 1rem; font-weight: 900; letter-spacing: -0.02em; color: var(--text); text-decoration: none; white-space: nowrap; display: flex; align-items: center; gap: 8px; }
+    .nav-logo-icon { font-size: 1.4rem; }
+    .nav-logo-sub { font-size: 0.7rem; font-weight: 600; color: var(--muted); letter-spacing: 0.04em; display: block; line-height: 1; }
+    .nav-links { display: flex; gap: 4px; list-style: none; }
+    .nav-links a { color: var(--subtle); text-decoration: none; font-size: 0.88rem; font-weight: 600; padding: 6px 12px; border-radius: 8px; transition: color 0.2s, background 0.2s; }
+    .nav-links a:hover { color: var(--brand); background: rgba(30,58,110,0.08); }
+    .nav-divider { width: 1px; height: 18px; background: var(--border); margin: 0 4px; align-self: center; flex-shrink: 0; }
+    footer { background: var(--text); color: rgba(255,255,255,0.7); padding: 48px 24px 32px; }
+    .footer-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; }
+    .footer-brand { font-size: 1rem; font-weight: 900; color: #fff; margin-bottom: 10px; }
+    .footer-tagline { font-size: 0.85rem; line-height: 1.6; }
+    .footer-col-title { font-size: 0.82rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 14px; }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .footer-links a { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.9rem; }
+    .footer-links a:hover { color: #fff; }
+    .footer-bottom { max-width: 1100px; margin: 32px auto 0; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 0.82rem; }
+    .footer-bottom a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.82rem; }
+    .footer-bottom a:hover { color: #fff; }
+    .legal-hero { background: linear-gradient(135deg, var(--brand) 0%, var(--brand2) 100%); color: white; padding: 56px 24px 48px; }
+    .legal-hero-inner { max-width: 800px; margin: 0 auto; }
+    .legal-hero-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.7; margin-bottom: 12px; }
+    .legal-hero h1 { font-size: clamp(1.8rem, 4vw, 2.4rem); font-weight: 900; letter-spacing: -0.03em; line-height: 1.2; margin-bottom: 12px; }
+    .legal-hero p { font-size: 1rem; opacity: 0.8; }
+    .legal-body { max-width: 800px; margin: 0 auto; padding: 48px 24px 72px; }
+    .legal-meta { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; margin-bottom: 36px; font-size: 0.85rem; color: var(--muted); display: flex; gap: 24px; flex-wrap: wrap; }
+    .legal-meta strong { color: var(--text); }
+    .legal-section { margin-bottom: 36px; }
+    .legal-section h2 { font-size: 1.1rem; font-weight: 800; color: var(--brand); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid rgba(30,58,110,0.1); }
+    .legal-section h3 { font-size: 0.97rem; font-weight: 700; color: var(--text); margin: 16px 0 6px; }
+    .legal-section p { font-size: 0.93rem; color: var(--subtle); margin-bottom: 10px; line-height: 1.7; }
+    .legal-section ul { padding-left: 20px; margin-bottom: 10px; }
+    .legal-section ul li { font-size: 0.93rem; color: var(--subtle); margin-bottom: 6px; line-height: 1.6; }
+    .warning-box { background: #fff8f0; border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 16px 0; font-size: 0.93rem; color: var(--subtle); }
+    .highlight-box { background: rgba(30,58,110,0.05); border-left: 3px solid var(--brand); border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 16px 0; font-size: 0.93rem; color: var(--subtle); }
+    @media (max-width: 768px) { .footer-inner { grid-template-columns: 1fr 1fr; gap: 28px; } .nav-links { display: none; } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-icon">🧠</span>
+      <span>AI Lektor exaktních věd<span class="nav-logo-sub">Česky · Podle osnov · Kdykoliv</span></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Domů</a></li>
+      <li class="nav-divider"></li>
+      <li><a href="skoly.html">Pro školy</a></li>
+      <li><a href="rodiny.html">Pro rodiny</a></li>
+      <li><a href="cenik.html">Ceník</a></li>
+      <li class="nav-divider"></li>
+      <li><a href="kontakt.html">Kontakt</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="legal-hero">
+  <div class="legal-hero-inner">
+    <div class="legal-hero-label">Právní dokumenty</div>
+    <h1>Podmínky použití AI</h1>
+    <p>Pravidla pro používání AI Lektora — co je povoleno, co je zakázáno a jak chráníme uživatele i provozovatele.</p>
+  </div>
+</div>
+
+<div class="legal-body">
+
+  <div class="legal-meta">
+    <span><strong>Platnost od:</strong> 1. 6. 2026</span>
+    <span><strong>Provozovatel:</strong> Miroslav Svoboda, IČO: 88282759</span>
+    <span><strong>Kontakt:</strong> ailektor.info@gmail.com</span>
+  </div>
+
+  <div class="legal-section">
+    <h2>1. Účel dokumentu</h2>
+    <p>Tento dokument (Acceptable Use Policy, AUP) stanovuje pravidla pro používání AI Lektora — vzdělávacího nástroje poháněného umělou inteligencí. Doplňuje Obchodní podmínky a je závazný pro všechny uživatele služby.</p>
+    <p>AI Lektor je navržen výhradně jako vzdělávací pomůcka pro žáky základních a středních škol v předmětech matematika, fyzika, biologie a chemie. Jakékoliv jiné využití je v rozporu s těmito podmínkami.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>2. Bezpečnostní ochrany systému</h2>
+    <div class="highlight-box">
+      AI Lektor obsahuje vícevrstvé bezpečnostní ochrany — včetně ochrany proti jailbreaku, roleplaying útokům, zakódovaným instrukcím a manipulativním dotazům — testované pro každý předmět a věkovou skupinu. Systém je pravidelně aktualizován.
+    </div>
+    <p>Bezpečnostní architektura zahrnuje:</p>
+    <ul>
+      <li>Tématické omezení — AI odpovídá výhradně na dotazy ze čtyř povolených předmětů</li>
+      <li>Ochranu proti záměrnému obcházení (jailbreak protection) — odolnost vůči roleplaying, kódování, postupnému vymývání hranic i fiktivním scénářům</li>
+      <li>Eskalaci tónu při opakovaných off-topic pokusech</li>
+      <li>Nouzový protokol — při zmínce o bezpečnostním problému systém přeruší výuku a nasměruje na pomoc</li>
+    </ul>
+  </div>
+
+  <div class="legal-section">
+    <h2>3. Povolené použití</h2>
+    <p>AI Lektor je určen výhradně k těmto účelům:</p>
+    <ul>
+      <li>Vzdělávací podpora v matematice, fyzice, biologii a chemii</li>
+      <li>Příprava na písemky, zkoušení a maturitu</li>
+      <li>Procvičování látky a porozumění učivu</li>
+      <li>Doplňková výuka v rámci školní výuky pod dohledem učitele</li>
+    </ul>
+  </div>
+
+  <div class="legal-section">
+    <h2>4. Zakázané použití</h2>
+    <div class="warning-box">
+      Následující jednání je zakázáno a může vést k okamžitému zrušení přístupu bez nároku na vrácení předplatného.
+    </div>
+    <h3>Záměrné obcházení bezpečnostních opatření</h3>
+    <ul>
+      <li>Pokusy o jailbreak — záměrné instrukce k opuštění role AI učitele</li>
+      <li>Roleplay a fiktivní scénáře sloužící k získání zakázaného obsahu</li>
+      <li>Zakódované instrukce (base64, ROT13, mezery mezi písmeny apod.)</li>
+      <li>Postupné budování kontextu za účelem manipulace s chováním AI</li>
+      <li>Vydávání se za administrátora, tvůrce nebo technický personál</li>
+    </ul>
+    <h3>Nevhodný obsah</h3>
+    <ul>
+      <li>Pokusy o získání návodů na výrobu nebezpečných látek, zbraní nebo výbušnin</li>
+      <li>Dotazy na výpočty dávek léků nebo jedů ve vztahu k tělesné hmotnosti</li>
+      <li>Pokusy o získání obsahu sexuální, násilné nebo extremistické povahy</li>
+      <li>Šikana, obtěžování nebo pokusy o poškození jiných uživatelů</li>
+    </ul>
+    <h3>Technické zneužití</h3>
+    <ul>
+      <li>Automatizované dotazování prostřednictvím skriptů nebo botů</li>
+      <li>Sdílení přístupových údajů za účelem obcházení předplatného</li>
+      <li>Pokusy o extrakci systémového promptu nebo interních instrukcí</li>
+      <li>Komerční využití výstupů AI bez souhlasu provozovatele</li>
+    </ul>
+  </div>
+
+  <div class="legal-section">
+    <h2>5. Odpovědnost za obsah při porušení podmínek</h2>
+    <p>AI Lektor obsahuje bezpečnostní ochrany navržené tak, aby záměrnému obcházení zabránily. Přesto provozovatel <strong>nenese odpovědnost za obsah vzniklý záměrným a opakovaným porušováním těchto podmínek</strong> ze strany uživatele.</p>
+    <p>Odpovědnost za škodu vzniklou v důsledku záměrného obcházení bezpečnostních opatření nese výhradně osoba, která toto obcházení provedla, nebo — v případě nezletilého — zákonný zástupce, pod jehož dohledem ke zneužití došlo.</p>
+    <p>Používání aplikace nezletilými probíhá pod dohledem a na odpovědnost rodiče nebo zákonného zástupce.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>6. Omezení AI výstupů</h2>
+    <p>Výstupy AI Lektora jsou vzdělávací pomůckou a jejich povaha přináší tato omezení:</p>
+    <ul>
+      <li><strong>AI není neomylná</strong> — výstupy mohou obsahovat chyby, zejména u komplexních výpočtů. Důležité výsledky vždy ověřte u učitele nebo z ověřeného zdroje.</li>
+      <li><strong>AI není náhrada odborníka</strong> — výstupy AI nesmí být použity jako odborné lékařské, právní nebo bezpečnostní stanovisko.</li>
+      <li><strong>AI nezná aktuální dění</strong> — znalosti AI mají časový horizont a nemusí reflektovat nejnovější vědecké poznatky.</li>
+    </ul>
+  </div>
+
+  <div class="legal-section">
+    <h2>7. Hlášení zneužití</h2>
+    <p>Pokud jste svědkem zneužití služby nebo máte podezření na nevhodný obsah, kontaktujte nás na ailektor.info@gmail.com. Přijatá hlášení prošetříme do 5 pracovních dní.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>8. Důsledky porušení</h2>
+    <p>Při porušení těchto podmínek si provozovatel vyhrazuje právo:</p>
+    <ul>
+      <li>Dočasně nebo trvale omezit přístup k službě</li>
+      <li>Zrušit předplatné bez nároku na vrácení zbývající části</li>
+      <li>V závažných případech předat věc orgánům činným v trestním řízení</li>
+    </ul>
+  </div>
+
+  <div class="legal-section">
+    <h2>9. Vztah k ostatním dokumentům</h2>
+    <p>Tyto podmínky jsou nedílnou součástí smluvního vztahu spolu s <a href="podminky.html" style="color: var(--brand);">Obchodními podmínkami</a> a <a href="soukromi.html" style="color: var(--brand);">Zásadami ochrany osobních údajů</a>. V případě rozporu mají Obchodní podmínky přednost.</p>
+  </div>
+
+  <div class="legal-section">
+    <h2>10. Identifikační údaje provozovatele</h2>
+    <p>Miroslav Svoboda, IČO: 88282759, se sídlem Bedřicha Smetany 566, 330 11 Třemošná, fyzická osoba podnikající na základě živnostenského oprávnění (OSVČ).</p>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">🧠 AI Lektor exaktních věd</div>
+      <p class="footer-tagline">Česky. Podle osnov. Kdykoliv.<br>Matematika, fyzika, biologie, chemie.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">Produkt</div>
+      <ul class="footer-links">
+        <li><a href="skoly.html">Pro školy</a></li>
+        <li><a href="rodiny.html">Pro rodiny</a></li>
+        <li><a href="cenik.html">Ceník</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Právní</div>
+      <ul class="footer-links">
+        <li><a href="podminky.html">Obchodní podmínky</a></li>
+        <li><a href="soukromi.html">Ochrana osobních údajů</a></li>
+        <li><a href="aup.html">Podmínky použití AI</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Kontakt</div>
+      <ul class="footer-links">
+        <li><a href="mailto:ailektor.info@gmail.com">ailektor.info@gmail.com</a></li>
+        <li><a href="kontakt.html">Kontaktní formulář</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 AI Lektor exaktních věd. Všechna práva vyhrazena. <a href="https://www.comgate.eu" target="_blank" rel="noopener"><img src="assets/platebni-loga.png" alt="Platby zajišťuje Comgate, VISA, Mastercard" style="height:28px; width:auto; vertical-align:middle; mix-blend-mode:multiply;"></a></p>
+    <div style="display:flex;gap:20px;">
+      <a href="podminky.html">Obchodní podmínky</a>
+      <a href="soukromi.html">Ochrana osobních údajů</a>
+      <a href="aup.html">Podmínky použití AI</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

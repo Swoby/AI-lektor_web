@@ -1,0 +1,5 @@
+# Systémové / dočasné soubory
+.fuse_hidden*
+.DS_Store
+Thumbs.db
+*.bak

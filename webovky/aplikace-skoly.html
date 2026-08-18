@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>Vstup do školní aplikace — AI Lektor</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f8f9fa;
+      color: #1a1a2e;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .card {
+      background: #fff;
+      max-width: 540px;
+      width: 100%;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+    }
+    .head {
+      background: linear-gradient(135deg, #1e3a6e, #2a5298);
+      padding: 2.2rem 2rem;
+      text-align: center;
+      color: #fff;
+    }
+    .head .logo { font-size: 2.4rem; }
+    .head h1 { font-size: 1.5rem; margin-top: 0.4rem; }
+    .head p { color: rgba(255,255,255,0.85); font-size: 0.95rem; margin-top: 0.3rem; }
+    .body { padding: 2rem; text-align: center; }
+    .body p { color: #555; line-height: 1.6; font-size: 1.02rem; }
+    .btn {
+      display: inline-block;
+      margin-top: 1.6rem;
+      background: #2a5298;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding: 1rem 2.4rem;
+      border-radius: 10px;
+      transition: background 0.2s;
+    }
+    .btn:hover { background: #1e3a6e; }
+    .note { margin-top: 1.4rem; font-size: 0.85rem; color: #999; }
+    .foot { padding: 1rem 2rem 1.6rem; text-align: center; font-size: 0.78rem; color: #aaa; }
+    .foot a { color: #2a5298; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="head">
+      <div class="logo">🧠</div>
+      <h1>Školní aplikace AI Lektor</h1>
+      <p>Matematika · Fyzika · Biologie · Chemie</p>
+    </div>
+    <div class="body">
+      <p>Vítejte! Klikněte na tlačítko níže a otevře se vám výuková aplikace pro školy.
+      Žáci se do ní dostanou přes QR kód od učitele — žádná registrace.</p>
+      <a class="btn" href="https://3ottpjwcuncbvhggzaqp8l.streamlit.app/">Vstoupit do aplikace →</a>
+      <p class="note">Aplikace se otevře v zabezpečeném prostředí Streamlit.</p>
+    </div>
+    <div class="foot">
+      © 2026 AI Lektor exaktních věd · <a href="https://ai-lektor.cz/">ai-lektor.cz</a> · Data v EU
+    </div>
+  </div>
+</body>
+</html>
