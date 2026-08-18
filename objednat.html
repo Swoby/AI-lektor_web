@@ -231,20 +231,21 @@
         <input type="radio" name="platba" value="karta" id="pay-karta" />
         <span class="pay-option-icon">💳</span>
         <div class="pay-option-text">
-          <strong>Platba kartou <span class="pay-soon">Brzy</span></strong>
-          <span>Online platba kartou — bude spuštěna v nejbližších dnech.</span>
+          <strong>Platba kartou</strong>
+          <span>Online platba kartou přes zabezpečenou bránu Comgate.</span>
         </div>
       </label>
       <label class="pay-option" id="pay-gpay-wrap">
         <input type="radio" name="platba" value="gpay" id="pay-gpay" />
         <span class="pay-option-icon">🔵</span>
         <div class="pay-option-text">
-          <strong>Google Pay <span class="pay-soon">Brzy</span></strong>
-          <span>Platba přes Google Pay — bude spuštěna v nejbližších dnech.</span>
+          <strong>Google Pay</strong>
+          <span>Rychlá platba přes Google Pay (na platební bráně Comgate).</span>
         </div>
       </label>
     </div>
     <span class="error-msg" id="err-platba">Zvolte prosím způsob platby.</span>
+    <span class="error-msg" id="err-payment-api" style="margin-top:10px;"></span>
 
     <button class="submit-btn" id="submit-btn" onclick="submitOrder()">
       Objednat závazně k platbě →
@@ -313,7 +314,7 @@
       <li><a href="soukromi.html">Ochrana osobních údajů</a></li>
       <li><a href="aup.html">Podmínky použití AI</a></li>
     </ul>
-    <div class="footer-copy">© 2026 Miroslav Svoboda, IČO: 88282759 · Bedřicha Smetany 566, 330 11 Třemošná · <a href="tel:+420777190891" style="color:inherit;">+420 777 190 891</a> · ailektor.info@gmail.com · Data v EU (Frankfurt)</div>
+    <div class="footer-copy">© 2026 Miroslav Svoboda, IČO: 88282759 · Bedřicha Smetany 566, 330 11 Třemošná · <a href="tel:+420777190891" style="color:inherit;">+420 777 190 891</a> · ailektor.info@gmail.com · Data v EU (Frankfurt) · <a href="https://www.comgate.eu" target="_blank" rel="noopener"><img src="assets/platebni-loga.png" alt="Platby zajišťuje Comgate, VISA, Mastercard" style="height:28px; width:auto; vertical-align:middle; mix-blend-mode:multiply;"></a></div>
   </div>
 </footer>
 
@@ -420,40 +421,62 @@ function submitOrder() {
   const platba = document.querySelector('input[name="platba"]:checked')?.value || 'prevod';
   const emailNotif = document.getElementById('email-notif').value.trim() || emailLogin;
   const btn = document.getElementById('submit-btn');
+  const errPaymentApi = document.getElementById('err-payment-api');
+  errPaymentApi.style.display = 'none';
+  errPaymentApi.textContent = '';
   btn.disabled = true;
   btn.textContent = 'Zpracovávám…';
 
-  // Uložení do leads se děje v send-order.js (Netlify Function)
+  const orderPayload = {
+    email_login:    emailLogin,
+    email_notif:    emailNotif,
+    plan_name:      currentPlan ? currentPlan.name : '—',
+    plan_typ:       currentPlan ? currentPlan.typ  : '—',
+    price:          currentPlan ? currentPlan.price : 0,
+    vs:             vs,
+    payment_method: platba,
+  };
 
-  // Odeslání potvrzovacího emailu přes Netlify Function
+  if (platba === 'karta' || platba === 'gpay') {
+    // Online platba — založ platbu v Comgate a přesměruj na platební bránu.
+    fetch('/.netlify/functions/create-payment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(orderPayload),
+    })
+      .then(async (res) => {
+        let data = {};
+        try { data = await res.json(); } catch {}
+        if (!res.ok || data.error || !data.redirect) {
+          throw new Error(data.error || 'Platební bránu se nepodařilo spustit, zkuste to prosím znovu.');
+        }
+        window.location.href = data.redirect;
+      })
+      .catch((err) => {
+        errPaymentApi.textContent = err.message || 'Nepodařilo se spustit platbu, zkuste to prosím znovu nebo zvolte platbu převodem.';
+        errPaymentApi.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Objednat závazně k platbě →';
+      });
+    return;
+  }
+
+  // Platba převodem — uložení do leads + potvrzovací e-mail přes Netlify Function
   fetch('/.netlify/functions/send-order', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      email_login:    emailLogin,
-      email_notif:    emailNotif,
-      plan_name:      currentPlan ? currentPlan.name : '—',
-      plan_typ:       currentPlan ? currentPlan.typ  : '—',
-      price:          currentPlan ? currentPlan.price : 0,
-      vs:             vs,
-      payment_method: platba,
-    })
+    body: JSON.stringify(orderPayload)
   }).catch(() => {}); // tichá chyba — success screen se zobrazí vždy
 
   // Zobrazení success screenu
   document.getElementById('form-wrap').style.display = 'none';
 
-  if (platba === 'prevod') {
-    const amount = currentPlan ? formatPrice(currentPlan.price) : '—';
-    document.getElementById('transfer-amount').textContent = amount + ' / měsíc';
-    document.getElementById('transfer-msg').textContent =
-      'AI Lektor ' + (currentPlan ? currentPlan.name : '') + ' - ' + vs;
-    document.getElementById('confirm-email').textContent = emailLogin;
-    showSuccess('success-prevod');
-  } else {
-    document.getElementById('confirm-email-online').textContent = emailLogin;
-    showSuccess('success-online');
-  }
+  const amount = currentPlan ? formatPrice(currentPlan.price) : '—';
+  document.getElementById('transfer-amount').textContent = amount + ' / měsíc';
+  document.getElementById('transfer-msg').textContent =
+    'AI Lektor ' + (currentPlan ? currentPlan.name : '') + ' - ' + vs;
+  document.getElementById('confirm-email').textContent = emailLogin;
+  showSuccess('success-prevod');
 }
 
 function showSuccess(id) {

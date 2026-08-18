@@ -1,8 +1,11 @@
 // Netlify Function: confirm-payment.js
 // Mira klikne na odkaz v emailu → zákazník dostane přístup na 30 dní
 // Env proměnné: SUPABASE_URL, SUPABASE_KEY, RESEND_API_KEY, RESEND_FROM
+//
+// Aktivační logika (upsert accounts + email) je od WP-3 vytažena do sdíleného modulu
+// _lib/activate-account.js, který používá i payment-webhook.js (Comgate karta/GPay).
 
-const RESEND_API = 'https://api.resend.com/emails';
+const { activateAccount } = require('./_lib/activate-account');
 
 exports.handler = async (event) => {
   const token = event.queryStringParameters?.token;
@@ -31,8 +34,6 @@ exports.handler = async (event) => {
 
   const SUPABASE_URL = process.env.SUPABASE_URL;
   const SUPABASE_KEY = process.env.SUPABASE_KEY;
-  const RESEND_API_KEY = process.env.RESEND_API_KEY;
-  const FROM = process.env.RESEND_FROM || 'AI Lektor <noreply@ai-lektor.cz>';
 
   if (!SUPABASE_URL || !SUPABASE_KEY) {
     return { statusCode: 500, headers: { 'Content-Type': 'text/html' }, body: htmlErr('Chyba konfigurace serveru.') };
@@ -46,7 +47,7 @@ exports.handler = async (event) => {
 
   // 1. Najdi token v payment_tokens
   const resToken = await fetch(
-    `${SUPABASE_URL}/rest/v1/payment_tokens?token=eq.${token}&pouzit=eq.false&select=email,vs`,
+    `${SUPABASE_URL}/rest/v1/payment_tokens?token=eq.${token}&pouzit=eq.false&select=email,vs,plan`,
     { headers: sbHeaders }
   );
   const tokens = await resToken.json();
@@ -55,19 +56,16 @@ exports.handler = async (event) => {
     return { statusCode: 404, headers: { 'Content-Type': 'text/html' }, body: htmlErr('Token nenalezen nebo již byl použit.') };
   }
 
-  const { email, vs } = tokens[0];
+  const { email, vs, plan } = tokens[0];
 
-  // 2. Vypočítej datum expirace (+30 dní)
-  const expirace = new Date();
-  expirace.setDate(expirace.getDate() + 30);
-  const datumExpirace = expirace.toISOString().split('T')[0];
-
-  // 3. Ulož do accounts (nebo aktualizuj pokud existuje)
-  await fetch(`${SUPABASE_URL}/rest/v1/accounts`, {
-    method: 'POST',
-    headers: { ...sbHeaders, 'Prefer': 'resolution=merge-duplicates' },
-    body: JSON.stringify({ email, datum_expirace: datumExpirace, plan: 'rodiny' }),
-  });
+  // 2-3-5. Aktivace účtu (upsert accounts + odeslání emailu) — sdílená logika, viz _lib/activate-account.js.
+  // plan bere se z uloženého řádku (WP-6 oprava natvrdo zadrátovaného 'rodiny'), s fallbackem uvnitř activateAccount.
+  try {
+    await activateAccount(email, plan, vs);
+  } catch (e) {
+    console.log('ERROR: confirm-payment - activateAccount selhal:', e.message, 'vs=', vs);
+    return { statusCode: 500, headers: { 'Content-Type': 'text/html' }, body: htmlErr('Nepodařilo se aktivovat účet, zkuste to prosím znovu.') };
+  }
 
   // 4. Označ token jako použitý
   await fetch(`${SUPABASE_URL}/rest/v1/payment_tokens?token=eq.${token}`, {
@@ -75,40 +73,6 @@ exports.handler = async (event) => {
     headers: sbHeaders,
     body: JSON.stringify({ pouzit: true }),
   });
-
-  // 5. Pošli zákazníkovi email s přihlašovacím odkazem
-  const appLink = `https://azqkj8fjpkhqhlvzeqtcyj.streamlit.app/`;
-  if (RESEND_API_KEY) {
-    await fetch(RESEND_API, {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        from: FROM,
-        to: [email],
-        subject: '🎉 Váš přístup do AI Lektoru je aktivní!',
-        html: `
-<!DOCTYPE html><html lang="cs"><head><meta charset="UTF-8"></head>
-<body style="margin:0;padding:0;background:#f5f2ec;font-family:'Segoe UI',sans-serif;">
-  <div style="max-width:520px;margin:40px auto;background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(30,58,110,0.1);">
-    <div style="background:linear-gradient(135deg,#1e3a6e,#2a5298);padding:28px 32px;">
-      <div style="font-size:1.2rem;font-weight:900;color:#fff;">🧠 AI Lektor exaktních věd</div>
-    </div>
-    <div style="padding:32px;">
-      <h2 style="color:#1a2535;margin:0 0 12px;">Platba přijata, přístup aktivní! 🎉</h2>
-      <p style="color:#5a6a7d;font-size:0.95rem;">Váš přístup je aktivní do <b>${datumExpirace}</b>.</p>
-      <a href="${appLink}" style="display:inline-block;margin:20px 0;background:linear-gradient(135deg,#1e3a6e,#2a5298);color:#fff;padding:14px 28px;border-radius:12px;text-decoration:none;font-weight:800;font-size:1rem;">
-        Spustit AI Lektor →
-      </a>
-      <p style="font-size:0.85rem;color:#888;">Dotazy? <a href="mailto:ailektor.info@gmail.com" style="color:#1e3a6e;">ailektor.info@gmail.com</a></p>
-    </div>
-    <div style="padding:16px 32px;background:#f5f2ec;text-align:center;font-size:0.78rem;color:#888;">
-      © 2026 AI Lektor exaktních věd · IČO: 88282759
-    </div>
-  </div>
-</body></html>`,
-      }),
-    });
-  }
 
   return {
     statusCode: 200,
